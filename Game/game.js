@@ -21,16 +21,35 @@ function Game(roomName) {
 	return true;
     }
 
-    var checkLineForPawn = function(pawn_map, inc_x, inc_y) {
-	if (!this.map[pawn_map + inc_x + (inc_y * this.col_nb)] == this.activePlayer)
-	    return false;
-	
+    var removeTwoPawn = function(pawn_index, inc_x, inc_y) {
 	var i = 1;
-	var cnt = 1;
-	while (cnt < 5)
+
+	this.map[pawn_index + (inc_x == 0 ? inc_x : inc_x + i)
+                                   + ((inc_y == 0 ? inc_y : inc_y + i) * this.col_nb)] = 0;
+	i += 1;
+	this.map[pawn_index + (inc_x == 0 ? inc_x : inc_x + i)
+                                   + ((inc_y == 0 ? inc_y : inc_y + i) * this.col_nb)] = 0;
+    };
+
+    this.arePawnTaken = function(pawn_index) {
+	if (this.map[pawn_index + 1 + (0 * this.col_nb)] != this.activePlayer && this.map[pawn_index + 1 + (0 * this.col_nb)] != 0)
+	    if (this.map[pawn_index + 2 + (0 * this.col_nb)] != this.activePlayer && this.map[pawn_index + 2 + (0 * this.col_nb)] != 0)
+		if (this.map[pawn_index + 3 + (0 * this.col_nb)] == this.activePlayer)
+		    {
+			removeTwoPawn(pawn_index, 1, 0);
+			return true;
+		    }
+    };
+
+    var checkLineForPawn = function(pawn_index, inc_x, inc_y, max, tileType) {
+	var i = 0;
+	var cnt = 0;
+
+	while (cnt < max)
 	    {
-		if (this.map[pawn_map + (inc_x == 0 ? inc_x : inc_x + i)
-                                   + ((inc_y == 0 ? inc_y : inc_y + i) * this.col_nb)] == 0)
+		// Check des bord ?? :3
+		if (this.map[pawn_index + (inc_x == 0 ? inc_x : inc_x + i)
+                                   + ((inc_y == 0 ? inc_y : inc_y + i) * this.col_nb)] != tileType)
 		    return false;
 		i += 1;
 		cnt += 1;
@@ -39,11 +58,13 @@ function Game(roomName) {
     };
 
     this.areThereFivePawn = function () {
-	if (checkLineForPawn(0 /* pawn just placed */, 1, 0) == true || checkLineForPawn(0 /* pawn just placed */, 0, 1) == true ||
-	    checkLineForPawn(0 /* pawn just placed */, -1, 0) == true || checkLineForPawn(0 /* pawn just placed */, 0, -1) == true ||
-	    checkLineForPawn(0 /* pawn just placed */, 1, 1) == true || checkLineForPawn(0 /* pawn just placed */, -1, -1) == true ||
-	    checkLineForPawn(0 /* pawn just placed */, -1, 1) == true || checkLineForPawn(0 /* pawn just placed */, 1, -1) == true)
+	// Problème possible si sur le bord (!!!!!!!!!!!!!!)
+	if (checkLineForPawn(0 /* pawn just placed */, 1, 0, 5, this.activePlayer + 1) == true || checkLineForPawn(0 /* pawn just placed */, 0, 1, 5, this.activePlayer + 1) == true ||
+	    checkLineForPawn(0 /* pawn just placed */, -1, 0, 5, this.activePlayer + 1) == true || checkLineForPawn(0 /* pawn just placed */, 0, -1, 5, this.activePlayer + 1) == true ||
+	    checkLineForPawn(0 /* pawn just placed */, 1, 1, 5, this.activePlayer + 1) == true || checkLineForPawn(0 /* pawn just placed */, -1, -1, 5, this.activePlayer + 1) == true ||
+	    checkLineForPawn(0 /* pawn just placed */, -1, 1, 5, this.activePlayer + 1) == true || checkLineForPawn(0 /* pawn just placed */, 1, -1, 5, this.activePlayer + 1) == true)
 	    return true;
+	// Rajouter le cinq cassable !
 	return false;
     };
 
