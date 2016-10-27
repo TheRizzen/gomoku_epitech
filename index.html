@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+  </head>
+  <body>
+  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var sock = io();
+    sock.on('connected', function (data) {
+      console.log(data);
+      document.write('You\'re the user #' + data.user);
+    });
+  </script>
+</html>
