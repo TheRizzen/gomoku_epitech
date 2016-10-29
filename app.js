@@ -7,7 +7,7 @@ var Game = require('./Game/game.js');
 games = [];
 games.push(new Game("room #0"));
 
-var join = require('./Game/join.js')(io, games);
+var handler = require('./Game/handler.js')(io, games);
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');

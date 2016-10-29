@@ -1,3 +1,6 @@
+Game = require('./game.js');
+Player = require('./player.js');
+
 var join = function(io, socket, games){
 
   var game = games[games.length - 1];
