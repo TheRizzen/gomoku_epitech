@@ -11,8 +11,11 @@
   <script>
     var sock = io();
     sock.on('connected', function (data) {
-      console.log(data);
-      document.write('You\'re the user #' + data.user);
+      document.write('<p>You\'re the user #' + data.user + '</p>' );
+      document.write('<p>In the room #' + data.room + '</p>');
+    });
+    sock.on('starting', function () {
+      document.write('<p>Room is full, Game is about to begin...</p>');
     });
   </script>
 </html>
