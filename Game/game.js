@@ -6,7 +6,6 @@ function Game(roomName) {
     this.activePlayer = 0; // 0 = p1, 1 = p2
     this.col_nb = 19;
     this.line_nb = 19;
-    this.pawnTaken = [0, 0];
     this.map = []; // 0 = empty | 1 = p1 | 2 = p2
     this.players = [];
 
