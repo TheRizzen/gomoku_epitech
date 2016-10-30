@@ -16,6 +16,10 @@
     });
     sock.on('starting', function () {
       document.write('<p>Room is full, Game is about to begin...</p>');
+      sock.emit('test', {test: 'test'});
     });
+sock.on('disconnected', function(data){
+  document.write('<p>Player ' + data.name + ' has left. Reason: ' + data.reason + '</p>');
+});
   </script>
 </html>

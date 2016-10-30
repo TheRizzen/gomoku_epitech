@@ -1,4 +1,5 @@
 join = require('./join.js');
+leave = require('./leave.js');
 
 module.exports = function(io, games) {
 
