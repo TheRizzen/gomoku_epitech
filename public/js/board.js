@@ -10,7 +10,8 @@ var tool = document.getElementById("tool"); // get the <select> element
 var socket = io();
 
 board.addEventListener("click", function(x, y) {
-  //socket.emit('putpawn', {{x: x, y: y}});
+  console.log(x, y);
+  socket.emit('putpawn', {x: x, y: y});
   if(tool.value == "black") {
     board.addObject({
       x: x,
