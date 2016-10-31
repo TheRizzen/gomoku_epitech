@@ -1,15 +1,17 @@
-var app = require('express')();
+var path = require('path');
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-var Game = require('./Game/game.js');
+var Game = require('./game/game.js');
 
 app.use(express.static(path.join(__dirname, 'public')));
 
 games = [];
 games.push(new Game("room #0"));
 
-var handler = require('./Game/handler.js')(io, games);
+var handler = require('./game/handler.js')(io, games);
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');

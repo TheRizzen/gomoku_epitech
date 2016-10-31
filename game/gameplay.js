@@ -1,7 +1,6 @@
 module.exports = {
   putpawn: function(io, socket, games) {
     var checkgame = function(games) {
-      games.
     }
 
     socket.on('putpawn', function(data) {
@@ -20,7 +19,6 @@ module.exports = {
         game.map[x * y] = player.id;
         io.to(game.room).emit('move', {x: x, y: y, player: player.id});
       }
-      checkgame
     });
   }
 };
