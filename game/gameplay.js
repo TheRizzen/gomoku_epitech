@@ -1,3 +1,5 @@
+var misc = require('./misc.js');
+
 module.exports = {
   putpawn: function(io, socket, games) {
     var checkgame = function(games) {
@@ -6,17 +8,18 @@ module.exports = {
     socket.on('putpawn', function(data) {
       var x = data.x;
       var y = data.y;
-      var player = find_player(games, socket.id);
+      var player = misc.find_player(games, socket.id);
       var game = player.game;
 
-      if (game.map[x * y] != 0) {
+      console.log(game.map[y * game.col_nb + x]);
+      if (game.map[y * game.col_nb + x] != 0) {
         console.log('badmove !');
         socket.emit('badmove', {x: x, y: y});
       }
       else {
         console.log('goodmove !');
         socket.emit('goodmove', {x: x, y: y});
-        game.map[x * y] = player.id;
+        game.map[y * game.col_nb + x] = player.id;
         io.to(game.room).emit('move', {x: x, y: y, player: player.id});
       }
     });
