@@ -14,7 +14,7 @@ games.push(new Game("room #0"));
 var handler = require('./game/handler.js')(io, games);
 
 app.get('/', function(req, res) {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(path.join(__dirname, './views/game.html'));
 })
 
 http.listen(8080, function() {});

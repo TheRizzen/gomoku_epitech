@@ -3,9 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <script type="text/javascript" src="/js/wgo.min.js">
+    <script type="text/javascript" src="/js/wgo.min.js"></script>
     <title>Gadgeto Go</title>
   </head>
   <body>
+    <select id="tool" style="display: block">
+      <option value="black" selected>Black</option>
+      <option value="white">White stone</option>
+      <option value="remove">Remove</option>
+    </select>
+    <div id="board"></div>
+    <script type="text/javascript" src="/js/board.js"></script>
   </body>
 </html>
