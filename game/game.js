@@ -20,6 +20,10 @@ function Game(roomName) {
 	[-1, 0],
 	];
 
+    this.get1DP = function(x, y) {
+	return (x + y * this.col_nb);
+    }
+
     this.clearBoard = function() {
 	var i = 0;
 
@@ -41,6 +45,10 @@ function Game(roomName) {
                                    + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - 1)) * this.col_nb)] = 0;
     };
 
+
+    this.twoThreeRule = function(pawn_index) {
+	return true;
+    }
 
     this.arePawnTaken = function(pawn_index) {
 	var i = 0;
