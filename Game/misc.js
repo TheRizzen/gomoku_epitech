@@ -4,7 +4,7 @@ module.exports = {
 
     games.forEach(function(game){
       game.players.forEach(function(player){
-        if (player.id == id){
+        if (player.sockid == id){
           return_value = player;
         }
       });

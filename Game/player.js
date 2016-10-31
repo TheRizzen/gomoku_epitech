@@ -1,6 +1,7 @@
-function Player(socket, game) {
-  this.id = socket.id;
+function Player(id, socket, game) {
+  this.id = id;
   this.socket = socket;
+  this.sockid = socket.id;
   this.pawn = 0;
   this.game = game;
   this.alive = true;
