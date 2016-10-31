@@ -4,6 +4,8 @@ var io = require('socket.io')(http);
 
 var Game = require('./Game/game.js');
 
+app.use(express.static(path.join(__dirname, 'public')));
+
 games = [];
 games.push(new Game("room #0"));
 

@@ -16,41 +16,41 @@
     </div>
   </body>
 </html>
-<script id="Grahpic" type="text/javascript">
+<script type="text/javascript">
 var board = new WGo.Board(document.getElementById("board"), {
-    width: 800,
-    size: 19,
-    right: -0.5,
-    bottom: -0.5
+  width: 800,
+  size: 19,
+  right: -0.5,
+  bottom: -0.5
 });
 
 var tool = document.getElementById("tool"); // get the <select> element
 
 board.addEventListener("click", function(x, y) {
-    if(tool.value == "black") {
-        board.addObject({
-            x: x,
-            y: y,
-            c: WGo.B
-        });
-    }
-    else if(tool.value == "white") {
-        board.addObject({
-            x: x,
-            y: y,
-            c: WGo.W
-        });
-    }
-    else if(tool.value == "remove") {
-        board.removeObjectsAt(x, y);
-    }
-    else {
-        board.addObject({
-            x: x,
-            y: y,
-            type: tool.value
-        });
-    }
+  if(tool.value == "black") {
+    board.addObject({
+      x: x,
+      y: y,
+      c: WGo.B
+    });
+  }
+  else if(tool.value == "white") {
+    board.addObject({
+      x: x,
+      y: y,
+      c: WGo.W
+    });
+  }
+  else if(tool.value == "remove") {
+    board.removeObjectsAt(x, y);
+  }
+  else {
+    board.addObject({
+      x: x,
+      y: y,
+      type: tool.value
+    });
+  }
 });
 
 var coordinates = {
