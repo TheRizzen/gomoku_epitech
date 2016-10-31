@@ -73,24 +73,34 @@ function Game(roomName) {
 	    }
     };
     
-    var checkLineForPawn = function(pawn_index, inc_x, inc_y, max, tileType) {
+    this.checkLineForPawn = function(pawn_index, inc_x, inc_y, max, tileType) {
 	var i = 0;
 	var cnt = 0;
 
 	while (cnt < max)
 	    {
+		console.log("Check");
+		console.log(pawn_index);
+		console.log(pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)) + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)) * this.col_nb));
+		console.log(this.map[pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)) + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)) * this.col_nb)]);
 		// Check des bord ?? :3
 		if (this.map[pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))
                                    + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)) * this.col_nb)] != tileType)
+		{
+		    console.log("False");
 		    return false;
+		}
 		i += 1;
 		cnt += 1;
 	    }
 	return true;
     };
 
-    var checkIfWon = function(idx, pawn_idx) {
+    this.checkIfWon = function(idx, pawn_idx) {
 	// Use of 2D perpendicular vector
+
+	console.log(idx);
+	console.log("Vecteur : " + this.moves[idx][0] + ", " + this.moves[idx][1]);
 	var norm_vec = [this.moves[idx][1], this.moves[idx][0] * -1]; // To check perpendically from each pawn of the winning five (in both direction)
 	var oppo_vec = [this.moves[idx][1] * -1, this.moves[idx][0]];
 	var i = 0;
@@ -141,11 +151,14 @@ function Game(roomName) {
 	// Problème possible si sur le bord (!!!!!!!!!!!!!!)
 	var i = 0;
 
+	console.log("Map :" + this.map);
 	while (i < 8)
 	    {
-		if (checkLineForPawn(pawn_index, this.moves[i][0], this.moves[i][1], 5, this.activePlayer + 1) == true)
+		console.log("Vector : " +  this.moves[i][0] + ", " + this.moves[i][1])
+		if (this.checkLineForPawn(pawn_index, this.moves[i][0], this.moves[i][1], 4, this.activePlayer + 1) == true)
 		{
-		    if (checkIfWon(i) == false)
+		    console.log("CInq Cassable !");
+		    if (this.checkIfWon(i, pawn_index) == true)
 			return false;
 		    return true;
 		}
