@@ -18,11 +18,6 @@ module.exports = {
         console.log('Partie gagné !');
         io.to(game.room).emit('win', {player: player.id, reason: "pawn alignment"});
       }
-
-      if (game.twoFreeThreeRule(game.get1DP(x, y)) == true) {
-	  console.log("OK c'est le cas que je voulais truver pgm !");
-        socket.emit('badmove', {x: x, y: y, value: game.map[y * game.col_nb + x]});
-      }
     }
 
     socket.on('putpawn', function(data) {
@@ -30,8 +25,12 @@ module.exports = {
       var y = data.y;
       var player = misc.find_player(games, socket.id);
       var game = player.game;
+      var bool_three;
 
-      if (game.map[y * game.col_nb + x] != 0 || data.player != game.activePlayer + 1) {
+      bool_three = game.twoFreeThreeRule(game.get1DP(x, y));
+      console.log(bool_three);
+
+      if (game.map[y * game.col_nb + x] != 0 || data.player != game.activePlayer + 1 || bool_three) {
         socket.emit('badmove', {x: x, y: y, value: game.map[y * game.col_nb + x]});
       }
       else {
