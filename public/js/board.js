@@ -5,35 +5,46 @@ var board = new WGo.Board(document.getElementById("board"), {
   bottom: -0.5
 });
 
+socket.on('badmove', function(data) {
+  var x = data.x;
+  var y = data.y;
+  var value = data.value;
+
+  console.log('badmove!');
+  console.log(x, y, value);
+  if (value > 0) {
+    board.addObject({
+      x: x,
+      y: y,
+      c: (value == 1 ? WGo.B : WGo.W)
+    });
+  }
+  else if (value == 0)
+    board.removeObjectsAt(x, y);
+});
+
+socket.on('move', function(data) {
+  var x = data.x;
+  var y = data.y;
+  var by_player = data.player;
+
+  if (by_player != playerid)
+    board.addObject({
+      x: x,
+      y: y,
+      c: (by_player == 1 ? WGo.B : WGo.W)
+    });
+});
+
 var tool = document.getElementById("tool"); // get the <select> element
 
-var socket = io();
-
 board.addEventListener("click", function(x, y) {
-  console.log(x, y);
-  socket.emit('putpawn', {x: x, y: y});
-  if(tool.value == "black") {
+  if (started) {
+    socket.emit('putpawn', {x: x, y: y});
     board.addObject({
       x: x,
       y: y,
-      c: WGo.B
-    });
-  }
-  else if(tool.value == "white") {
-    board.addObject({
-      x: x,
-      y: y,
-      c: WGo.W
-    });
-  }
-  else if(tool.value == "remove") {
-    board.removeObjectsAt(x, y);
-  }
-  else {
-    board.addObject({
-      x: x,
-      y: y,
-      type: tool.value
+      c: (playerid == 1 ? WGo.B : WGo.W)
     });
   }
 });

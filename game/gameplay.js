@@ -14,11 +14,10 @@ module.exports = {
       console.log(game.map[y * game.col_nb + x]);
       if (game.map[y * game.col_nb + x] != 0) {
         console.log('badmove !');
-        socket.emit('badmove', {x: x, y: y});
+        socket.emit('badmove', {x: x, y: y, value: game.map[y * game.col_nb + x]});
       }
       else {
         console.log('goodmove !');
-        socket.emit('goodmove', {x: x, y: y});
         game.map[y * game.col_nb + x] = player.id;
         io.to(game.room).emit('move', {x: x, y: y, player: player.id});
       }
