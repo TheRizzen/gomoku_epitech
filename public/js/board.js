@@ -36,10 +36,17 @@ socket.on('move', function(data) {
     });
 });
 
+socket.on('win', function(data) {
+  var elem = document.createElement('li');
+  elem.appendChild(document.createTextNode('Player #' + data.player + ' won by ' + data.reason));
+  chatlog.appendChild(elem);
+  onGoing = 0;
+})
+
 var tool = document.getElementById("tool"); // get the <select> element
 
 board.addEventListener("click", function(x, y) {
-  if (started) {
+  if (onGoing) {
     socket.emit('putpawn', {x: x, y: y, player: playerid});
     board.addObject({
       x: x,

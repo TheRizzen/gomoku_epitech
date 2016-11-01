@@ -2,20 +2,24 @@ var misc = require('./misc.js');
 
 module.exports = {
   putpawn: function(io, socket, games) {
-    var checkgame = function(game, x, y) {
-	console.log("Pawn index = " + game.get1DP(x, y));
+    var checkgame = function(game, player, x, y) {
+      console.log("Pawn index = " + game.get1DP(x, y));
 
-	// Check si pion pris
-	game.arePawnTaken(game.get1DP(x, y));
+      // Check si pion pris
+      var taken = game.arePawnTaken(game.get1DP(x, y));
 
-	// Check de fin de jeu
-	if (game.tenPawnTaken() == true)
-	    console.log("Partie gagné : 10 pions pris !");
+      if (taken[0] != -1)
+        io.to(game.room).emit('eatpawn', x1: taken[0], y1: taken[1], x2: taken[2], y2: taken[3]);
+      // Check de fin de jeu
+      if (game.tenPawnTaken() == true) {
+        console.log("Partie gagné : 10 pions pris !");
+        io.to(game.room).emit('win', {player: player.id, reason: "pawn taken"});
+      }
 
-	if (game.areThereFivePawn(game.get1DP(x, y)) == true)
-	    console.log('Partie gagné !');
-	else
-	    console.log('Partie pas fini !');
+      if (game.areThereFivePawn(game.get1DP(x, y)) == true) {
+        console.log('Partie gagné !');
+        io.to(game.room).emit('win', {player: player.id, reason: "pawn alignment"});
+      }
     }
 
     socket.on('putpawn', function(data) {
@@ -33,7 +37,7 @@ module.exports = {
         console.log('goodmove !');
         game.map[y * game.col_nb + x] = player.id;
         io.to(game.room).emit('move', {x: x, y: y, player: player.id});
-	checkgame(game, x, y);
+	checkgame(game, player, x, y);
         game.activePlayer = game.activePlayer ^ 1;
       }
     });

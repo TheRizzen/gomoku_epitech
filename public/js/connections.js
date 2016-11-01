@@ -1,7 +1,7 @@
 var chatlog = document.getElementById('chatlog');
 
 var playerid = 0;
-var started = false;
+var onGoing = false;
 
 socket.on('connected', function (data) {
   var elem2 = document.createElement('li');
@@ -22,12 +22,12 @@ socket.on('starting', function () {
   var elem = document.createElement('li');
   elem.appendChild(document.createTextNode('Room is full, Game is about to begin...'));
   chatlog.appendChild(elem);
-  started = true;
+  onGoing = true;
 });
 
 socket.on('disconnected', function(data){
   var elem = document.createElement('li');
   elem.appendChild(document.createTextNode('Player #' + data.name + ' has left. Reason: ' + data.reason));
   chatlog.appendChild(elem);
-  started = false;
+  onGoing = false;
 });
