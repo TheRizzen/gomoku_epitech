@@ -74,41 +74,74 @@ function Game(roomName) {
 
 
     this.isThisFreeThree = function(pawn_idx, vec) {
-	var opp_vec = [vec[0] * -1][vec[1] * -1];
+	var opp_vec = [vec[0] * -1, vec[1] * -1];
 	var pawn_cnt = 1;
-
-	while (0 > 1)
-	    {
-		if (this.map[pawn_idx + (vec[0] == 0 ? vec[0] : (vec[0] > 0 ? vec[0] + i : vec[0] - i))
-                                   + ((vec[1] == 0 ? vec[1] : (vec[1] > 0 ? vec[1] + i : vec[1] - 1))
-				      * this.col_nb)])
-		    pawn_cnt += 1;
-	    }
-	return (false);
-    }
-
-    this.twoFreeThreeRule = function(pawn_index) {
+	var space_cnt = 0;
 	var i = 0;
-	var cnt = 0;
 
-	while (i < 8)
+	while (i < 3)
 	    {
-		if (cnt >= 2)
+/*		console.log("vecteur : " + vec);
+		console.log("this.map[" + i + "] : " + (this.map[pawn_idx + (vec[0] == 0 ? vec[0] : (vec[0] > 0 ? vec[0] + i : vec[0] - i)) + ((vec[1] == 0 ? vec[1] : (vec[1] > 0 ? vec[1] + i : vec[1] - i)) *  this.col_nb)]));*/
+		if (space_cnt > 1)
+		    break;
+		if (this.map[pawn_idx + (vec[0] == 0 ? vec[0] : (vec[0] > 0 ? vec[0] + i : vec[0] - i))
+                             + ((vec[1] == 0 ? vec[1] : (vec[1] > 0 ? vec[1] + i : vec[1] - i)) *  this.col_nb)] == this.activePlayer + 1)
+		    pawn_cnt += 1;
+		else if (this.map[pawn_idx + (vec[0] == 0 ? vec[0] : (vec[0] > 0 ? vec[0] + i : vec[0] - i))
+				  + ((vec[1] == 0 ? vec[1] : (vec[1] > 0 ? vec[1] + i : vec[1] - i)) * this.col_nb)] == 0)
+		    space_cnt += 1;
+		i += 1;
+		if (pawn_cnt >= 3)
 		    return true;
-		if (isThisFreeThree(pawn_index, this.moves[i]) == true)
-		    cnt += 1;
+	    }
+
+	space_cnt = 0;
+	i = 0;
+	while (i < 3)
+	    {
+/*		console.log("opp_vecteur : " + opp_vec);
+		console.log("this.map[" + i + "] : " + (this.map[pawn_idx + (opp_vec[0] == 0 ? opp_vec[0] : (opp_vec[0] > 0 ? opp_vec[0] + i : opp_vec[0] - i)) + ((opp_vec[1] == 0 ? opp_vec[1] : (opp_vec[1] > 0 ? opp_vec[1] + i : opp_vec[1] - i)) *  this.col_nb)]));*/
+		if (space_cnt > 1)
+		    break;
+		if (this.map[pawn_idx + (opp_vec[0] == 0 ? opp_vec[0] : (opp_vec[0] > 0 ? opp_vec[0] + i : opp_vec[0] - i))
+                             + ((opp_vec[1] == 0 ? opp_vec[1] : (opp_vec[1] > 0 ? opp_vec[1] + i : opp_vec[1] - i)) *  this.col_nb)] == this.activePlayer + 1)
+		    pawn_cnt += 1;
+		else if (this.map[pawn_idx + (opp_vec[0] == 0 ? opp_vec[0] : (opp_vec[0] > 0 ? opp_vec[0] + i : opp_vec[0] - i))
+				  + ((opp_vec[1] == 0 ? opp_vec[1] : (opp_vec[1] > 0 ? opp_vec[1] + i : opp_vec[1] - i)) * this.col_nb)] == 0)
+		    space_cnt += 1;
+		if (pawn_cnt >= 3)
+		    return true;
 		i += 1;
 	    }
 	return false;
     }
-
+    
+    this.twoFreeThreeRule = function(pawn_index) {
+	var i = 0;
+	var cnt = 0;
+	
+	while (i < 8)
+	{
+	    if (cnt == 2)
+		return true;
+	    if (this.isThisFreeThree(pawn_index, this.moves[i]) == true)
+		cnt += 1;
+	    i += 1;
+	}
+	if (cnt == 2)
+	    return true;
+//	console.log("ATTENTION : " + cnt);
+	return false;
+    }
+    
     this.arePawnTaken = function(x, y) {
 	var i = 0;
-
+	
 	var pawn_index = this.get1DP(x, y);
 	var taken = [-1,-1];
 	while (i < 8)
-	    {
+	{
 		if (this.map[pawn_index + this.moves[i][0] + (this.moves[i][1] * this.col_nb)] != this.activePlayer + 1 &&
 		    this.map[pawn_index + this.moves[i][0] + (this.moves[i][1] * this.col_nb)] != 0)
 		    if (this.map[pawn_index +

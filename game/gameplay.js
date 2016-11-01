@@ -20,6 +20,7 @@ module.exports = {
       }
 
       if (game.twoFreeThreeRule(game.get1DP(x, y)) == true) {
+	  console.log("OK c'est le cas que je voulais truver pgm !");
         socket.emit('badmove', {x: x, y: y, value: game.map[y * game.col_nb + x]});
       }
     }
