@@ -57,21 +57,30 @@ function Game(roomName) {
 
     this.removeTwoPawn = function(pawn_index, inc_x, inc_y) {
 	var i = 0;
+	var taken = [0, 0]
 
 	this.map[pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))
                                    + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - 1)) * this.col_nb)] = 0;
-	console.log("Removed pawn 1 : " + pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)) + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - 1)) * this.col_nb));
+	taken[0] = pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)) + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - 1)) * this.col_nb);
 	i += 1;
 	this.map[pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))
                                    + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - 1)) * this.col_nb)] = 0;
-	console.log("Removed pawn 2 : " + pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)) + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - 1)) * this.col_nb));
+	taken[1] = pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)) + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - 1)) * this.col_nb);
+	return taken;
     };
 
 
     this.isThisFreeThree = function(pawn_idx, vec) {
 	var opp_vec = [vec[0] * -1][vec[1] * -1];
-	var pawn_cnt = 0;
+	var pawn_cnt = 1;
 
+	while (0 > 1)
+	    {
+		if (this.map[pawn_idx + (vec[0] == 0 ? vec[0] : (vec[0] > 0 ? vec[0] + i : vec[0] - i))
+                                   + ((vec[1] == 0 ? vec[1] : (vec[1] > 0 ? vec[1] + i : vec[1] - 1))
+				      * this.col_nb)])
+		    pawn_cnt += 1;
+	    }
 	return (false);
     }
 
@@ -93,6 +102,7 @@ function Game(roomName) {
     this.arePawnTaken = function(pawn_index) {
 	var i = 0;
 
+	var taken = [-1,-1];
 	while (i < 8)
 	    {
 		if (this.map[pawn_index + this.moves[i][0] + (this.moves[i][1] * this.col_nb)] != this.activePlayer + 1 &&
@@ -106,12 +116,13 @@ function Game(roomName) {
 			if (this.map[pawn_index + (this.moves[i][0] == 0 ? this.moves[i][0] : (this.moves[i][0] > 0 ? this.moves[i][0] + 2 : this.moves[i][0] - 2)) +
 				     ((this.moves[i][1] == 0 ? this.moves[i][1] : (this.moves[i][1] > 0 ? this.moves[i][1] + 2 : this.moves[i][1] - 2)) * this.col_nb)] == this.activePlayer + 1)
                 {
-                    this.removeTwoPawn(pawn_index, this.moves[i][0], this.moves[i][1]);
+                    taken = this.removeTwoPawn(pawn_index, this.moves[i][0], this.moves[i][1]);
 		    this.players[this.activePlayer].pawn += 2;
-                    return true;
+                    return taken;
                 };
 		i += 1;
 	    }
+	return taken;
     };
     
     this.checkLineForPawn = function(pawn_index, inc_x, inc_y, max, tileType) {
@@ -192,7 +203,9 @@ function Game(roomName) {
 		if (this.checkLineForPawn(pawn_index, this.moves[i][0], this.moves[i][1], 4, this.activePlayer + 1) == true)
 		{
 		    if (this.checkIfWon(i, pawn_index) == true)
+		    {
 			return false;
+		    }
 		    return true;
 		}
 		i += 1;
