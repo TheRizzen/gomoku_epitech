@@ -107,7 +107,7 @@ function Game(roomName) {
 				     ((this.moves[i][1] == 0 ? this.moves[i][1] : (this.moves[i][1] > 0 ? this.moves[i][1] + 2 : this.moves[i][1] - 2)) * this.col_nb)] == this.activePlayer + 1)
                 {
                     this.removeTwoPawn(pawn_index, this.moves[i][0], this.moves[i][1]);
-		    this.player[this.activePlayer].pawn += 2;
+		    this.players[this.activePlayer].pawn += 2;
                     return true;
                 };
 		i += 1;
