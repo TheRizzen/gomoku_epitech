@@ -3,7 +3,15 @@ var misc = require('./misc.js');
 module.exports = {
   putpawn: function(io, socket, games) {
     var checkgame = function(game, x, y) {
-	console.log(game.get1DP(x, y));
+	console.log("Pawn index = " + game.get1DP(x, y));
+
+	// Check si pion pris
+	game.arePawnTaken(game.get1DP(x, y));
+
+	// Check de fin de jeu
+	if (game.tenPawnTaken() == true)
+	    console.log("Partie gagné : 10 pions pris !");
+
 	if (game.areThereFivePawn(game.get1DP(x, y)) == true)
 	    console.log('Partie gagné !');
 	else
