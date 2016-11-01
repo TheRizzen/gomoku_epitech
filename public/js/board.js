@@ -40,7 +40,7 @@ var tool = document.getElementById("tool"); // get the <select> element
 
 board.addEventListener("click", function(x, y) {
   if (started) {
-    socket.emit('putpawn', {x: x, y: y});
+    socket.emit('putpawn', {x: x, y: y, player: playerid});
     board.addObject({
       x: x,
       y: y,
