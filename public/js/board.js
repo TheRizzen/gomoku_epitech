@@ -43,6 +43,11 @@ socket.on('win', function(data) {
   onGoing = 0;
 })
 
+socket.on('eatpawn', function(data) {
+  board.removeObjectsAt(data.x1, data.y1);
+  board.removeObjectsAt(data.x2, data.y2);
+});
+
 var tool = document.getElementById("tool"); // get the <select> element
 
 board.addEventListener("click", function(x, y) {
