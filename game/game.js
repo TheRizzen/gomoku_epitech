@@ -55,17 +55,20 @@ function Game(roomName) {
 	return true;
     }
 
-    this.removeTwoPawn = function(pawn_index, inc_x, inc_y) {
+    this.removeTwoPawn = function(x, y, inc_x, inc_y) {
 	var i = 0;
-	var taken = [0, 0]
+	var taken = [0, 0, 0, 0]
+	var pawn_index = this.get1DP(x, y);
 
 	this.map[pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))
                                    + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - 1)) * this.col_nb)] = 0;
-	taken[0] = pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)) + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - 1)) * this.col_nb);
+	taken[0] = x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i));
+	taken[1] = y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i));
 	i += 1;
 	this.map[pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))
                                    + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - 1)) * this.col_nb)] = 0;
-	taken[1] = pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)) + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - 1)) * this.col_nb);
+	taken[2] = x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i));
+	taken[3] = y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i));
 	return taken;
     };
 
@@ -99,9 +102,10 @@ function Game(roomName) {
 	return false;
     }
 
-    this.arePawnTaken = function(pawn_index) {
+    this.arePawnTaken = function(x, y) {
 	var i = 0;
 
+	var pawn_index = this.get1DP(x, y);
 	var taken = [-1,-1];
 	while (i < 8)
 	    {
@@ -116,7 +120,7 @@ function Game(roomName) {
 			if (this.map[pawn_index + (this.moves[i][0] == 0 ? this.moves[i][0] : (this.moves[i][0] > 0 ? this.moves[i][0] + 2 : this.moves[i][0] - 2)) +
 				     ((this.moves[i][1] == 0 ? this.moves[i][1] : (this.moves[i][1] > 0 ? this.moves[i][1] + 2 : this.moves[i][1] - 2)) * this.col_nb)] == this.activePlayer + 1)
                 {
-                    taken = this.removeTwoPawn(pawn_index, this.moves[i][0], this.moves[i][1]);
+                    taken = this.removeTwoPawn(x, y, this.moves[i][0], this.moves[i][1]);
 		    this.players[this.activePlayer].pawn += 2;
                     return taken;
                 };
