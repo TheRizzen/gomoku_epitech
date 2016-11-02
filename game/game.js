@@ -79,11 +79,11 @@ function Game(roomName) {
 
     this.freeThreePattern = function(c1, c2, c3, c4, c5, player)
     {
-	if ((c1 == 0 || c1 != player) && c2 == player && c3 == player && (c4 == 0 || c4 != player))
+	if ((c1 == 0) && c2 == player && c3 == player && (c4 == 0))
 	    return (true);
-	if ((c1 == 0 || c1 != player) && (c2 == 0 || c2 != player) && c3 == player && c4 == player && (c5 == 0 || c5 != player))
+	if ((c1 == 0) && (c2 == 0) && c3 == player && c4 == player && (c5 == 0))
 	    return (true);
-	if ((c1 == 0 || c1 != player) && c2 == player && (c3 == 0 || c3 != player) && c4 == player && (c5 == 0 || c5 != player))
+	if ((c1 == 0) && c2 == player && (c3 == 0) && c4 == player && (c5 == 0))
 	    return (true);
 	return (false);
     }
