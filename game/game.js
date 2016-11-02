@@ -72,48 +72,51 @@ function Game(roomName) {
 	return taken;
     };
 
+    this.getIndexWithVector = function(pawn_idx, vec1, vec2, inc) {
+	console.log("INDEX : " + (pawn_idx + (vec1 == 0 ? vec1 : (vec1 > 0 ? vec1 + inc : vec1 - inc)) + ((vec2 == 0 ? vec2 : (vec2 > 0 ? vec2 + inc : vec2 - inc)) * this.col_nb)));
+	return (pawn_idx + (vec1 == 0 ? vec1 : (vec1 > 0 ? vec1 + inc : vec1 - inc)) + ((vec2 == 0 ? vec2 : (vec2 > 0 ? vec2 + inc : vec2 - inc)) * this.col_nb));
+}
 
-    this.isThisFreeThree = function(pawn_idx, vec) {
+    this.freeThreePattern = function(c1, c2, c3, c4, c5, player)
+    {
+	if ((c1 == 0 || c1 != player) && c2 == player && c3 == player && (c4 == 0 || c4 != player))
+	    return (true);
+	if ((c1 == 0 || c1 != player) && (c2 == 0 || c2 != player) && c3 == player && c4 == player && (c5 == 0 || c5 != player))
+	    return (true);
+	if ((c1 == 0 || c1 != player) && c2 == player && (c3 == 0 || c3 != player) && c4 == player && (c5 == 0 || c5 != player))
+	    return (true);
+	return (false);
+    }
+
+    this.isThisFreeThree = function(pawn_idx, vec, i) {
 	var opp_vec = [vec[0] * -1, vec[1] * -1];
+	/* Version 0.1 en commentaire dans la fonction	
 	var pawn_cnt = 1;
+	var enemy_cnt = 0;
 	var space_cnt = 0;
 	var i = 0;
-
+	
 	while (i < 3)
-	    {
-/*		console.log("vecteur : " + vec);
-		console.log("this.map[" + i + "] : " + (this.map[pawn_idx + (vec[0] == 0 ? vec[0] : (vec[0] > 0 ? vec[0] + i : vec[0] - i)) + ((vec[1] == 0 ? vec[1] : (vec[1] > 0 ? vec[1] + i : vec[1] - i)) *  this.col_nb)]));*/
-		if (space_cnt > 1)
-		    break;
-		if (this.map[pawn_idx + (vec[0] == 0 ? vec[0] : (vec[0] > 0 ? vec[0] + i : vec[0] - i))
-                             + ((vec[1] == 0 ? vec[1] : (vec[1] > 0 ? vec[1] + i : vec[1] - i)) *  this.col_nb)] == this.activePlayer + 1)
-		    pawn_cnt += 1;
-		else if (this.map[pawn_idx + (vec[0] == 0 ? vec[0] : (vec[0] > 0 ? vec[0] + i : vec[0] - i))
-				  + ((vec[1] == 0 ? vec[1] : (vec[1] > 0 ? vec[1] + i : vec[1] - i)) * this.col_nb)] == 0)
-		    space_cnt += 1;
-		i += 1;
-		if (pawn_cnt >= 3)
-		    return true;
-	    }
-
-	space_cnt = 0;
-	i = 0;
-	while (i < 3)
-	    {
-/*		console.log("opp_vecteur : " + opp_vec);
-		console.log("this.map[" + i + "] : " + (this.map[pawn_idx + (opp_vec[0] == 0 ? opp_vec[0] : (opp_vec[0] > 0 ? opp_vec[0] + i : opp_vec[0] - i)) + ((opp_vec[1] == 0 ? opp_vec[1] : (opp_vec[1] > 0 ? opp_vec[1] + i : opp_vec[1] - i)) *  this.col_nb)]));*/
-		if (space_cnt > 1)
-		    break;
-		if (this.map[pawn_idx + (opp_vec[0] == 0 ? opp_vec[0] : (opp_vec[0] > 0 ? opp_vec[0] + i : opp_vec[0] - i))
-                             + ((opp_vec[1] == 0 ? opp_vec[1] : (opp_vec[1] > 0 ? opp_vec[1] + i : opp_vec[1] - i)) *  this.col_nb)] == this.activePlayer + 1)
-		    pawn_cnt += 1;
-		else if (this.map[pawn_idx + (opp_vec[0] == 0 ? opp_vec[0] : (opp_vec[0] > 0 ? opp_vec[0] + i : opp_vec[0] - i))
-				  + ((opp_vec[1] == 0 ? opp_vec[1] : (opp_vec[1] > 0 ? opp_vec[1] + i : opp_vec[1] - i)) * this.col_nb)] == 0)
-		    space_cnt += 1;
-		if (pawn_cnt >= 3)
-		    return true;
-		i += 1;
-	    }
+	{*/
+	if (this.freeThreePattern(this.map[this.getIndexWithVector(pawn_idx, opp_vec[0], opp_vec[1], 0)],
+				  this.map[this.getIndexWithVector(pawn_idx, vec[0], vec[1], 0)],
+				  this.map[this.getIndexWithVector(pawn_idx, vec[0], vec[1], 1)],
+				  this.map[this.getIndexWithVector(pawn_idx, vec[0], vec[1], 2)],
+				  this.map[this.getIndexWithVector(pawn_idx, vec[0], vec[1], 3)],
+				  this.activePlayer + 1) ||
+	    this.freeThreePattern(this.map[this.getIndexWithVector(pawn_idx, opp_vec[0], opp_vec[1], 3)],
+				  this.map[this.getIndexWithVector(pawn_idx, opp_vec[0], opp_vec[1], 2)],
+				  this.map[this.getIndexWithVector(pawn_idx, opp_vec[0], opp_vec[1], 1)],
+				  this.map[this.getIndexWithVector(pawn_idx, opp_vec[0], opp_vec[1], 0)],
+				  this.map[this.getIndexWithVector(pawn_idx, vec[0], vec[1], 0)],
+				  this.activePlayer + 1) ||
+	    this.freeThreePattern(this.map[this.getIndexWithVector(pawn_idx, opp_vec[0], opp_vec[1], 1)],
+				  this.map[this.getIndexWithVector(pawn_idx, opp_vec[0], opp_vec[1], 0)],
+				  this.map[this.getIndexWithVector(pawn_idx, vec[0], vec[1], 0)],
+				  this.map[this.getIndexWithVector(pawn_idx, vec[0], vec[1], 1)],
+				  this.map[this.getIndexWithVector(pawn_idx, vec[0], vec[1], 2)],
+				  this.activePlayer + 1))
+	    return (true);
 	return false;
     }
     
@@ -121,17 +124,16 @@ function Game(roomName) {
 	var i = 0;
 	var cnt = 0;
 	
-	while (i < 8)
+	while (i < 5)
 	{
-	    if (cnt == 2)
-		return true;
-	    if (this.isThisFreeThree(pawn_index, this.moves[i]) == true)
+/*	    if (cnt >= 2)
+		return true;*/
+	    if (i != 3 && this.isThisFreeThree(pawn_index, this.moves[i]) == true)
 		cnt += 1;
 	    i += 1;
 	}
-	if (cnt == 2)
+	if (cnt >= 2)
 	    return true;
-//	console.log("ATTENTION : " + cnt);
 	return false;
     }
     
