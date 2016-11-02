@@ -1,5 +1,8 @@
-module.exports = function(io, socket) {
+var misc = require('./misc.js')
+
+module.exports = function(io, socket, games) {
   socket.on('message', function (data) {
-    io.emit('message', {user: data.user, message: data.message});
+    game = misc.find_player(games, socket.id).game;
+    io.to(game.room).emit('message', {user: data.user, message: data.message});
   });
 };

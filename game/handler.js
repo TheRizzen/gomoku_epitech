@@ -9,6 +9,6 @@ module.exports = function(io, games) {
     join(io, socket, games);
     leave(io, socket, games);
     putpawn(io, socket, games);
-    chat(io, socket);
+    chat(io, socket, games);
   });
 };
