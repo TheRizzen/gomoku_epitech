@@ -234,21 +234,220 @@ function Game(roomName) {
 
     this.areThereFivePawn = function (pawn_index) {
 	// Problème possible si sur le bord (!!!!!!!!!!!!!!)
-	var i = 0;
 
 //	console.log("Map :" + this.map);
-	while (i < 8)
+	if (this.checkLineForPawn(pawn_index, this.moves[0][0], this.moves[0][1], 4, this.activePlayer + 1) == true)
+	{
+	    if (this.checkIfWon(i, pawn_index) == true)
 	    {
-		if (this.checkLineForPawn(pawn_index, this.moves[i][0], this.moves[i][1], 4, this.activePlayer + 1) == true)
-		{
-		    if (this.checkIfWon(i, pawn_index) == true)
-		    {
-			return false;
-		    }
-		    return true;
-		}
-		i += 1;
+		return false;
 	    }
+	    return true;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[3][0], this.moves[3][1], 4, this.activePlayer + 1) == true)
+	{
+	    if (this.checkIfWon(i, pawn_index) == true)
+	    {
+		return false;
+	    }
+	    return true;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[0][0], this.moves[0][1], 3, this.activePlayer + 1) == true)
+	{
+	    if (this.checkLineForPawn(pawn_index, this.moves[3][0], this.moves[3][1], 1, this.activePlayer + 1) == true)
+	    {
+		if (this.checkIfWon(i, pawn_index) == true)
+		{
+		    return false;
+		}
+		return true;
+	    }
+	    return false;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[0][0], this.moves[0][1], 2, this.activePlayer + 1) == true)
+	{
+	    if (this.checkLineForPawn(pawn_index, this.moves[3][0], this.moves[3][1], 2, this.activePlayer + 1) == true)
+	    {
+		if (this.checkIfWon(i, pawn_index) == true)
+		{
+		    return false;
+		}
+		return true;
+	    }
+	    return false;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[0][0], this.moves[0][1], 1, this.activePlayer + 1) == true)
+	{
+	    if (this.checkLineForPawn(pawn_index, this.moves[3][0], this.moves[3][1], 3, this.activePlayer + 1) == true)
+	    {
+		if (this.checkIfWon(i, pawn_index) == true)
+		{
+		    return false;
+		}
+		return true;
+	    }
+	    return false;
+	}
+
+	if (this.checkLineForPawn(pawn_index, this.moves[1][0], this.moves[1][1], 4, this.activePlayer + 1) == true)
+	{
+	    if (this.checkIfWon(i, pawn_index) == true)
+	    {
+		return false;
+	    }
+	    return true;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[6][0], this.moves[6][1], 4, this.activePlayer + 1) == true)
+	{
+	    if (this.checkIfWon(i, pawn_index) == true)
+	    {
+		return false;
+	    }
+	    return true;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[1][0], this.moves[1][1], 3, this.activePlayer + 1) == true)
+	{
+	    if (this.checkLineForPawn(pawn_index, this.moves[6][0], this.moves[6][1], 1, this.activePlayer + 1) == true)
+	    {
+		if (this.checkIfWon(i, pawn_index) == true)
+		{
+		    return false;
+		}
+		return true;
+	    }
+	    return false;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[1][0], this.moves[1][1], 2, this.activePlayer + 1) == true)
+	{
+	    if (this.checkLineForPawn(pawn_index, this.moves[6][0], this.moves[6][1], 2, this.activePlayer + 1) == true)
+	    {
+		if (this.checkIfWon(i, pawn_index) == true)
+		{
+		    return false;
+		}
+		return true;
+	    }
+	    return false;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[1][0], this.moves[1][1], 1, this.activePlayer + 1) == true)
+	{
+	    if (this.checkLineForPawn(pawn_index, this.moves[6][0], this.moves[6][1], 3, this.activePlayer + 1) == true)
+	    {
+		if (this.checkIfWon(i, pawn_index) == true)
+		{
+		    return false;
+		}
+		return true;
+	    }
+	    return false;
+	}
+
+	if (this.checkLineForPawn(pawn_index, this.moves[2][0], this.moves[2][1], 4, this.activePlayer + 1) == true)
+	{
+	    if (this.checkIfWon(i, pawn_index) == true)
+	    {
+		return false;
+	    }
+	    return true;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[7][0], this.moves[7][1], 4, this.activePlayer + 1) == true)
+	{
+	    if (this.checkIfWon(i, pawn_index) == true)
+	    {
+		return false;
+	    }
+	    return true;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[2][0], this.moves[2][1], 3, this.activePlayer + 1) == true)
+	{
+	    if (this.checkLineForPawn(pawn_index, this.moves[7][0], this.moves[7][1], 1, this.activePlayer + 1) == true)
+	    {
+		if (this.checkIfWon(i, pawn_index) == true)
+		{
+		    return false;
+		}
+		return true;
+	    }
+	    return false;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[2][0], this.moves[2][1], 2, this.activePlayer + 1) == true)
+	{
+	    if (this.checkLineForPawn(pawn_index, this.moves[7][0], this.moves[7][1], 2, this.activePlayer + 1) == true)
+	    {
+		if (this.checkIfWon(i, pawn_index) == true)
+		{
+		    return false;
+		}
+		return true;
+	    }
+	    return false;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[2][0], this.moves[2][1], 1, this.activePlayer + 1) == true)
+	{
+	    if (this.checkLineForPawn(pawn_index, this.moves[7][0], this.moves[7][1], 3, this.activePlayer + 1) == true)
+	    {
+		if (this.checkIfWon(i, pawn_index) == true)
+		{
+		    return false;
+		}
+		return true;
+	    }
+	    return false;
+	}
+
+
+	if (this.checkLineForPawn(pawn_index, this.moves[4][0], this.moves[4][1], 4, this.activePlayer + 1) == true)
+	{
+	    if (this.checkIfWon(i, pawn_index) == true)
+	    {
+		return false;
+	    }
+	    return true;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[5][0], this.moves[5][1], 4, this.activePlayer + 1) == true)
+	{
+	    if (this.checkIfWon(i, pawn_index) == true)
+	    {
+		return false;
+	    }
+	    return true;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[4][0], this.moves[4][1], 3, this.activePlayer + 1) == true)
+	{
+	    if (this.checkLineForPawn(pawn_index, this.moves[5][0], this.moves[5][1], 1, this.activePlayer + 1) == true)
+	    {
+		if (this.checkIfWon(i, pawn_index) == true)
+		{
+		    return false;
+		}
+		return true;
+	    }
+	    return false;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[4][0], this.moves[4][1], 2, this.activePlayer + 1) == true)
+	{
+	    if (this.checkLineForPawn(pawn_index, this.moves[5][0], this.moves[5][1], 2, this.activePlayer + 1) == true)
+	    {
+		if (this.checkIfWon(i, pawn_index) == true)
+		{
+		    return false;
+		}
+		return true;
+	    }
+	    return false;
+	}
+	if (this.checkLineForPawn(pawn_index, this.moves[4][0], this.moves[4][1], 1, this.activePlayer + 1) == true)
+	{
+	    if (this.checkLineForPawn(pawn_index, this.moves[5][0], this.moves[5][1], 3, this.activePlayer + 1) == true)
+	    {
+		if (this.checkIfWon(i, pawn_index) == true)
+		{
+		    return false;
+		}
+		return true;
+	    }
+	    return false;
+	}
 	return false;
     };
 
