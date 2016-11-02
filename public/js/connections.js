@@ -31,3 +31,15 @@ socket.on('disconnected', function(data){
   chatlog.appendChild(elem);
   onGoing = false;
 });
+
+$('form').submit(function() {
+  socket.emit('message', {user: playerid, message: $('#message').val()});
+  $('#message').val('');
+  return (false);
+});
+
+socket.on('message', function(data) {
+  var elem = document.createElement('li');
+  elem.appendChild(document.createTextNode('Player #' + data.user + ': ' + data.message));
+  chatlog.appendChild(elem);
+});
