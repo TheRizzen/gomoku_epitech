@@ -7,7 +7,7 @@ module.exports = {
       var taken = game.arePawnTaken(x, y);
 
       if (taken[0] != -1)
-        io.to(game.room).emit('eatpawn', {x1: taken[0], y1: taken[1], x2: taken[2], y2: taken[3], player: player.id});
+        io.to(game.room).emit('eatpawn', {x1: taken[0], y1: taken[1], x2: taken[2], y2: taken[3], player: player.id, nb_eaten: player.pawn});
       // Check de fin de jeu
       if (game.tenPawnTaken() == true) {
         console.log("Partie gagné : 10 pions pris !");

@@ -46,6 +46,9 @@ socket.on('win', function(data) {
 socket.on('eatpawn', function(data) {
   board.removeObjectsAt(data.x1, data.y1);
   board.removeObjectsAt(data.x2, data.y2);
+  var elem = document.createElement('li');
+  elem.appendChild(document.createTextNode('Player #' + data.player + ' has yet to eat ' + (10 - data.nb_eaten) + ' more stones to win'));
+  chatlog.appendChild(elem);
 });
 
 var tool = document.getElementById("tool"); // get the <select> element
