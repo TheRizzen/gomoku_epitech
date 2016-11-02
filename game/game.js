@@ -235,10 +235,12 @@ function Game(roomName) {
     this.areThereFivePawn = function (pawn_index) {
 	// Problème possible si sur le bord (!!!!!!!!!!!!!!)
 
+	var i = 0
+
 //	console.log("Map :" + this.map);
 	if (this.checkLineForPawn(pawn_index, this.moves[0][0], this.moves[0][1], 4, this.activePlayer + 1) == true)
 	{
-	    if (this.checkIfWon(i, pawn_index) == true)
+	    if (this.checkIfWon(0, pawn_index) == true)
 	    {
 		return false;
 	    }
@@ -246,7 +248,7 @@ function Game(roomName) {
 	}
 	if (this.checkLineForPawn(pawn_index, this.moves[3][0], this.moves[3][1], 4, this.activePlayer + 1) == true)
 	{
-	    if (this.checkIfWon(i, pawn_index) == true)
+	    if (this.checkIfWon(3, pawn_index) == true)
 	    {
 		return false;
 	    }
@@ -256,7 +258,7 @@ function Game(roomName) {
 	{
 	    if (this.checkLineForPawn(pawn_index, this.moves[3][0], this.moves[3][1], 1, this.activePlayer + 1) == true)
 	    {
-		if (this.checkIfWon(i, pawn_index) == true)
+		if (this.checkIfWon(0, pawn_index) == true)
 		{
 		    return false;
 		}
