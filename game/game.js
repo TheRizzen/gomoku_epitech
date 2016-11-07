@@ -173,22 +173,17 @@ function Game(roomName) {
 	return true;
     };
 
-    this.checkIfWon = function(idx, pawn_idx) {
-	// Use of 2D perpendicular vector
-
-	var norm_vec = [this.moves[idx][1], this.moves[idx][0] * -1]; // To check perpendically from each pawn of the winning five (in both direction)
-	var oppo_vec = [this.moves[idx][1] * -1, this.moves[idx][0]];
+    this.checkBreakable = function(vec, max, norm_vec, oppo_vec) {
 	var i = 0;
 	var tmp_idx = 0; // For clarity's sake
 	var tmp_vec_idx1 = 0; // Checking one above
 	var tmp_vec_idx2 = 0; // checking one below
 	var tmp_vec_idx3 = 0; // checking 2 below or above (depending on the results of the last two)
 
-	while (i < 5)
+	while (i < max)
 	{
 	    // Node from the winning line
-	    tmp_idx = pawn_idx + (this.moves[idx][0] == 0 ? this.moves[idx][0] : (this.moves[idx][0] > 0 ? this.moves[idx][0] + i : this.moves[idx][0] - i)) +
-		((this.moves[idx][1] == 0 ? this.moves[idx][1] : (this.moves[idx][1] > 0 ? this.moves[idx][1] + i : this.moves[idx][1] - i)) * this.col_nb);
+	    tmp_idx = this.getIndexWithVector(pawn_idx, vec[0], vec[1], i);
 
 	    // Perpendicular node (positive)
 	    tmp_vec_idx1 = tmp_idx + norm_vec[0] + (norm_vec[1] * this.col_nb);
@@ -201,23 +196,34 @@ function Game(roomName) {
 	    console.log("neg perp node : " + tmp_vec_idx2 + " -> " + this.map[tmp_vec_idx2]);*/
 	    if (this.map[tmp_vec_idx1] == this.activePlayer + 1 || (this.map[tmp_vec_idx2] != this.activePlayer + 1 && this.map[tmp_vec_idx2] != 0))
 	    {
-		tmp_vec_idx3 = tmp_idx + (norm_vec[0] == 0 ? norm_vec[0] : (norm_vec[0] > 0 ? norm_vec[0] + 1 : norm_vec[0] - 1)) +
-                    ((norm_vec[1] == 0 ? norm_vec[1] : (norm_vec[1] > 0 ? norm_vec[1] + 1 : norm_vec[1] - 1)) * this.col_nb); // Second allied pawn is in normal vector direction
-		// check si bonne position pour être dans un cinq cassable (actuellement -> X00*) | ne reste plus qu'à checker l'étoile
-		    if (this.map[tmp_vec_idx3] != this.activePlayer + 1 && this.map[tmp_vec_idx3] != 0)
-			return true;
+		tmp_vec_idx3 = this.getIndexWithVector(tmp_idx, norm_vec[0], norm_vec[1], 1);// Second allied pawn is in opposite vector direction
+             	// check si bonne position pour être dans un cinq cassable (actuellement -> X00*) | ne reste plus qu'à checker l'étoile
+		if (this.map[tmp_vec_idx3] != this.activePlayer + 1 && this.map[tmp_vec_idx3] != 0)
+		    return true;
 	    }
 	    else if (this.map[tmp_vec_idx1] != 0 || this.map[tmp_vec_idx2] == this.activePlayer + 1)
 	    {
-		tmp_vec_idx3 = tmp_idx + (oppo_vec[0] == 0 ? oppo_vec[0] : (oppo_vec[0] > 0 ? oppo_vec[0] + 1 : oppo_vec[0] - 1)) +
-                    ((oppo_vec[1] == 0 ? oppo_vec[1] : (oppo_vec[1] > 0 ? oppo_vec[1] + 1 : oppo_vec[1] - 1)) * this.col_nb); // Second allied pawn is in opposite vector direction
-		    // check si bonne position pour être dans un cinq cassable (actuellement -> X00*) | ne reste plus qu'à checker l'étoile
-		    if (this.map[tmp_vec_idx3] != this.activePlayer + 1 && this.map[tmp_vec_idx3] != 0)
-			if (this.map[tmp_vec_idx2] == this.activePlayer + 1)
-			    return true;
+		tmp_vec_idx3 = this.getIndexWithVector(tmp_idx, oppo_vec[0], oppo_vec[1], 1);// Second allied pawn is in opposite vector direction
+		// check si bonne position pour être dans un cinq cassable (actuellement -> X00*) | ne reste plus qu'à checker l'étoile
+		if (this.map[tmp_vec_idx3] != this.activePlayer + 1 && this.map[tmp_vec_idx3] != 0)
+		    if (this.map[tmp_vec_idx2] == this.activePlayer + 1)
+			return true;
 	    }
 	    i += 1;
 	}
+	return false;
+}
+
+    this.checkIfWon = function(vec1, vec2, pawn_idx, max_vec1, max_vec2) {
+	// Use of 2D perpendicular vector
+
+	var norm_vec = [vec1[1], vec1[0] * -1]; // To check perpendically from each pawn of the winning five (in both direction)
+	var oppo_vec = [vec1[1] * -1, vec1[0]];
+
+	if (checkBreakable(vec1, max_vec1, norm_vec, oppo_vec) == true)
+	    return true;
+	if (checkBreakable(vec2, max_vec2, norm_vec, oppo_vec) == true)
+	    return true;
 	return false;
     }
 
@@ -231,7 +237,7 @@ function Game(roomName) {
 	    {
 		if (this.checkLineForPawn(pawn, vec2[0][0], vec2[0][1], vec2_max, playNum) == true)
 		{
-		    if (this.checkIfWon(0, pawn) == true)
+		    if (this.checkIfWon(vec1, vec2, pawn, vec1_max, vec2_max) == true)
 			return false;
 		    return true;
 		}
@@ -239,6 +245,7 @@ function Game(roomName) {
 	    vec1_max -= 1;
 	    vec2_max += 1;
 	}
+	return false;
     }
     
     this.areThereFivePawn = function (pawn_index) {

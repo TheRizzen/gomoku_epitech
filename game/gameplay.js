@@ -7,10 +7,7 @@ module.exports = {
 	    var taken = game.arePawnTaken(x, y);
 	    var takenLen = taken.length;
 	    
-	    console.log("Taken = " + taken)
 	    for (var i = 0; i < takenLen; i += 4) {
-		console.log("je mange : " + taken[i] + taken[i + 1]);
-		console.log("je mange : " + taken[i + 2] + taken[i + 3]);
 		io.to(game.room).emit('eatpawn', {x1: taken[i], y1: taken[i + 1], x2: taken[i + 2], y2: taken[i + 3], player: player.id, nb_eaten: player.pawn});
 	    }
 	    
