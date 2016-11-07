@@ -55,23 +55,6 @@ function Game(roomName) {
 	return true;
     }
 
-    this.removeTwoPawn = function(x, y, inc_x, inc_y) {
-	var i = 0;
-	var taken = [0, 0, 0, 0]
-	var pawn_index = this.get1DP(x, y);
-
-	this.map[pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))
-                                   + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - 1)) * this.col_nb)] = 0;
-	taken[0] = x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i));
-	taken[1] = y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i));
-	i += 1;
-	this.map[pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))
-                                   + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - 1)) * this.col_nb)] = 0;
-	taken[2] = x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i));
-	taken[3] = y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i));
-	return taken;
-    };
-
     this.getIndexWithVector = function(pawn_idx, vec1, vec2, inc) {
 	console.log("INDEX : " + (pawn_idx + (vec1 == 0 ? vec1 : (vec1 > 0 ? vec1 + inc : vec1 - inc)) + ((vec2 == 0 ? vec2 : (vec2 > 0 ? vec2 + inc : vec2 - inc)) * this.col_nb)));
 	return (pawn_idx + (vec1 == 0 ? vec1 : (vec1 > 0 ? vec1 + inc : vec1 - inc)) + ((vec2 == 0 ? vec2 : (vec2 > 0 ? vec2 + inc : vec2 - inc)) * this.col_nb));
@@ -90,14 +73,7 @@ function Game(roomName) {
 
     this.isThisFreeThree = function(pawn_idx, vec, i) {
 	var opp_vec = [vec[0] * -1, vec[1] * -1];
-	/* Version 0.1 en commentaire dans la fonction	
-	var pawn_cnt = 1;
-	var enemy_cnt = 0;
-	var space_cnt = 0;
-	var i = 0;
-	
-	while (i < 3)
-	{*/
+
 	if (this.freeThreePattern(this.map[this.getIndexWithVector(pawn_idx, opp_vec[0], opp_vec[1], 0)],
 				  this.map[this.getIndexWithVector(pawn_idx, vec[0], vec[1], 0)],
 				  this.map[this.getIndexWithVector(pawn_idx, vec[0], vec[1], 1)],
@@ -126,8 +102,6 @@ function Game(roomName) {
 	
 	while (i < 5)
 	{
-/*	    if (cnt >= 2)
-		return true;*/
 	    if (i != 3 && this.isThisFreeThree(pawn_index, this.moves[i]) == true)
 		cnt += 1;
 	    i += 1;
@@ -137,11 +111,28 @@ function Game(roomName) {
 	return false;
     }
     
+    this.removeTwoPawn = function(x, y, inc_x, inc_y) {
+	var i = 0;
+	var taken = [0, 0, 0, 0]
+	var pawn_index = this.get1DP(x, y);
+	
+	this.map[this.getIndexWithVector(pawn_index, inc_x, inc_y, i)] = 0;
+	taken[0] = x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i));
+	taken[1] = y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i));
+	i += 1;
+	
+	this.map[this.getIndexWithVector(pawn_index, inc_x, inc_y, i)] = 0;
+	taken[2] = x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i));
+	taken[3] = y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i));
+	return taken;
+    };
+
     this.arePawnTaken = function(x, y) {
 	var i = 0;
 	
 	var pawn_index = this.get1DP(x, y);
-	var taken = [-1,-1];
+	var taken = [];
+
 	while (i < 8)
 	{
 		if (this.map[pawn_index + this.moves[i][0] + (this.moves[i][1] * this.col_nb)] != this.activePlayer + 1 &&
@@ -154,13 +145,16 @@ function Game(roomName) {
                                  ((this.moves[i][1] == 0 ? this.moves[i][1] : (this.moves[i][1] > 0 ? this.moves[i][1] + 1 : this.moves[i][1] - 1)) * this.col_nb)] != 0)
 			if (this.map[pawn_index + (this.moves[i][0] == 0 ? this.moves[i][0] : (this.moves[i][0] > 0 ? this.moves[i][0] + 2 : this.moves[i][0] - 2)) +
 				     ((this.moves[i][1] == 0 ? this.moves[i][1] : (this.moves[i][1] > 0 ? this.moves[i][1] + 2 : this.moves[i][1] - 2)) * this.col_nb)] == this.activePlayer + 1)
-                {
-                    taken = this.removeTwoPawn(x, y, this.moves[i][0], this.moves[i][1]);
-		    this.players[this.activePlayer].pawn += 2;
-                    return taken;
-                };
-		i += 1;
-	    }
+            {
+		var tmp_arr = this.removeTwoPawn(x, y, this.moves[i][0], this.moves[i][1]);
+                taken.push(tmp_arr[0]);
+                taken.push(tmp_arr[1]);
+                taken.push(tmp_arr[2]);
+                taken.push(tmp_arr[3]);
+		this.players[this.activePlayer].pawn += 2;
+            }
+	    i += 1;
+	}
 	return taken;
     };
     
@@ -170,11 +164,6 @@ function Game(roomName) {
 
 	while (cnt < max)
 	    {
-/*		console.log("Check");
-		console.log(pawn_index);
-		console.log(pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)) + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)) * this.col_nb));
-		console.log(this.map[pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)) + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)) * this.col_nb)]);*/
-		// Check des bord ?? :3
 		if (this.map[pawn_index + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))
                              + ((inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)) * this.col_nb)] != tileType)
 		    return false;
@@ -232,224 +221,37 @@ function Game(roomName) {
 	return false;
     }
 
+    this.checkVectorForFive = function(pawn, vec1, vec2, playNum) {
+	var vec1_max = 5;
+	var vec2_max = 0;
+
+	while (vec2_max <= 5)
+	{
+	    if (this.checkLineForPawn(pawn, vec1[0][0], vec1[0][1], vec1_max, playNum) == true)
+	    {
+		if (this.checkLineForPawn(pawn, vec2[0][0], vec2[0][1], vec2_max, playNum) == true)
+		{
+		    if (this.checkIfWon(0, pawn) == true)
+			return false;
+		    return true;
+		}
+	    }
+	    vec1_max -= 1;
+	    vec2_max += 1;
+	}
+    }
+    
     this.areThereFivePawn = function (pawn_index) {
 	// Problème possible si sur le bord (!!!!!!!!!!!!!!)
 
-	var i = 0
-
-//	console.log("Map :" + this.map);
-	if (this.checkLineForPawn(pawn_index, this.moves[0][0], this.moves[0][1], 4, this.activePlayer + 1) == true)
-	{
-	    if (this.checkIfWon(0, pawn_index) == true)
-	    {
-		return false;
-	    }
+	if (this.checkVectorForFive(pawn_index, this.moves[0], this.moves[3], this.activePlayer + 1) == true)
 	    return true;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[3][0], this.moves[3][1], 4, this.activePlayer + 1) == true)
-	{
-	    if (this.checkIfWon(3, pawn_index) == true)
-	    {
-		return false;
-	    }
+	if (this.checkVectorForFive(pawn_index, this.moves[1], this.moves[6], this.activePlayer + 1) == true)
 	    return true;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[0][0], this.moves[0][1], 3, this.activePlayer + 1) == true)
-	{
-	    if (this.checkLineForPawn(pawn_index, this.moves[3][0], this.moves[3][1], 1, this.activePlayer + 1) == true)
-	    {
-		if (this.checkIfWon(0, pawn_index) == true)
-		{
-		    return false;
-		}
-		return true;
-	    }
-	    return false;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[0][0], this.moves[0][1], 2, this.activePlayer + 1) == true)
-	{
-	    if (this.checkLineForPawn(pawn_index, this.moves[3][0], this.moves[3][1], 2, this.activePlayer + 1) == true)
-	    {
-		if (this.checkIfWon(i, pawn_index) == true)
-		{
-		    return false;
-		}
-		return true;
-	    }
-	    return false;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[0][0], this.moves[0][1], 1, this.activePlayer + 1) == true)
-	{
-	    if (this.checkLineForPawn(pawn_index, this.moves[3][0], this.moves[3][1], 3, this.activePlayer + 1) == true)
-	    {
-		if (this.checkIfWon(i, pawn_index) == true)
-		{
-		    return false;
-		}
-		return true;
-	    }
-	    return false;
-	}
-
-	if (this.checkLineForPawn(pawn_index, this.moves[1][0], this.moves[1][1], 4, this.activePlayer + 1) == true)
-	{
-	    if (this.checkIfWon(i, pawn_index) == true)
-	    {
-		return false;
-	    }
+	if (this.checkVectorForFive(pawn_index, this.moves[2], this.moves[7], this.activePlayer + 1) == true)
 	    return true;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[6][0], this.moves[6][1], 4, this.activePlayer + 1) == true)
-	{
-	    if (this.checkIfWon(i, pawn_index) == true)
-	    {
-		return false;
-	    }
+	if (this.checkVectorForFive(pawn_index, this.moves[4], this.moves[5], this.activePlayer + 1) == true)
 	    return true;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[1][0], this.moves[1][1], 3, this.activePlayer + 1) == true)
-	{
-	    if (this.checkLineForPawn(pawn_index, this.moves[6][0], this.moves[6][1], 1, this.activePlayer + 1) == true)
-	    {
-		if (this.checkIfWon(i, pawn_index) == true)
-		{
-		    return false;
-		}
-		return true;
-	    }
-	    return false;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[1][0], this.moves[1][1], 2, this.activePlayer + 1) == true)
-	{
-	    if (this.checkLineForPawn(pawn_index, this.moves[6][0], this.moves[6][1], 2, this.activePlayer + 1) == true)
-	    {
-		if (this.checkIfWon(i, pawn_index) == true)
-		{
-		    return false;
-		}
-		return true;
-	    }
-	    return false;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[1][0], this.moves[1][1], 1, this.activePlayer + 1) == true)
-	{
-	    if (this.checkLineForPawn(pawn_index, this.moves[6][0], this.moves[6][1], 3, this.activePlayer + 1) == true)
-	    {
-		if (this.checkIfWon(i, pawn_index) == true)
-		{
-		    return false;
-		}
-		return true;
-	    }
-	    return false;
-	}
-
-	if (this.checkLineForPawn(pawn_index, this.moves[2][0], this.moves[2][1], 4, this.activePlayer + 1) == true)
-	{
-	    if (this.checkIfWon(i, pawn_index) == true)
-	    {
-		return false;
-	    }
-	    return true;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[7][0], this.moves[7][1], 4, this.activePlayer + 1) == true)
-	{
-	    if (this.checkIfWon(i, pawn_index) == true)
-	    {
-		return false;
-	    }
-	    return true;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[2][0], this.moves[2][1], 3, this.activePlayer + 1) == true)
-	{
-	    if (this.checkLineForPawn(pawn_index, this.moves[7][0], this.moves[7][1], 1, this.activePlayer + 1) == true)
-	    {
-		if (this.checkIfWon(i, pawn_index) == true)
-		{
-		    return false;
-		}
-		return true;
-	    }
-	    return false;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[2][0], this.moves[2][1], 2, this.activePlayer + 1) == true)
-	{
-	    if (this.checkLineForPawn(pawn_index, this.moves[7][0], this.moves[7][1], 2, this.activePlayer + 1) == true)
-	    {
-		if (this.checkIfWon(i, pawn_index) == true)
-		{
-		    return false;
-		}
-		return true;
-	    }
-	    return false;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[2][0], this.moves[2][1], 1, this.activePlayer + 1) == true)
-	{
-	    if (this.checkLineForPawn(pawn_index, this.moves[7][0], this.moves[7][1], 3, this.activePlayer + 1) == true)
-	    {
-		if (this.checkIfWon(i, pawn_index) == true)
-		{
-		    return false;
-		}
-		return true;
-	    }
-	    return false;
-	}
-
-
-	if (this.checkLineForPawn(pawn_index, this.moves[4][0], this.moves[4][1], 4, this.activePlayer + 1) == true)
-	{
-	    if (this.checkIfWon(i, pawn_index) == true)
-	    {
-		return false;
-	    }
-	    return true;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[5][0], this.moves[5][1], 4, this.activePlayer + 1) == true)
-	{
-	    if (this.checkIfWon(i, pawn_index) == true)
-	    {
-		return false;
-	    }
-	    return true;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[4][0], this.moves[4][1], 3, this.activePlayer + 1) == true)
-	{
-	    if (this.checkLineForPawn(pawn_index, this.moves[5][0], this.moves[5][1], 1, this.activePlayer + 1) == true)
-	    {
-		if (this.checkIfWon(i, pawn_index) == true)
-		{
-		    return false;
-		}
-		return true;
-	    }
-	    return false;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[4][0], this.moves[4][1], 2, this.activePlayer + 1) == true)
-	{
-	    if (this.checkLineForPawn(pawn_index, this.moves[5][0], this.moves[5][1], 2, this.activePlayer + 1) == true)
-	    {
-		if (this.checkIfWon(i, pawn_index) == true)
-		{
-		    return false;
-		}
-		return true;
-	    }
-	    return false;
-	}
-	if (this.checkLineForPawn(pawn_index, this.moves[4][0], this.moves[4][1], 1, this.activePlayer + 1) == true)
-	{
-	    if (this.checkLineForPawn(pawn_index, this.moves[5][0], this.moves[5][1], 3, this.activePlayer + 1) == true)
-	    {
-		if (this.checkIfWon(i, pawn_index) == true)
-		{
-		    return false;
-		}
-		return true;
-	    }
-	    return false;
-	}
 	return false;
     };
 
