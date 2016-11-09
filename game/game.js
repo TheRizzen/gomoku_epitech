@@ -56,7 +56,6 @@ function Game(roomName) {
     }
 
     this.getIndexWithVector = function(pawn_idx, vec1, vec2, inc) {
-	console.log("INDEX : " + (pawn_idx + (vec1 == 0 ? vec1 : (vec1 > 0 ? vec1 + inc : vec1 - inc)) + ((vec2 == 0 ? vec2 : (vec2 > 0 ? vec2 + inc : vec2 - inc)) * this.col_nb)));
 	return (pawn_idx + (vec1 == 0 ? vec1 : (vec1 > 0 ? vec1 + inc : vec1 - inc)) + ((vec2 == 0 ? vec2 : (vec2 > 0 ? vec2 + inc : vec2 - inc)) * this.col_nb));
 }
 
@@ -173,7 +172,7 @@ function Game(roomName) {
 	return true;
     };
 
-    this.checkBreakable = function(vec, max, norm_vec, oppo_vec) {
+    this.checkBreakable = function(pawn_idx, vec, max, norm_vec, oppo_vec) {
 	var i = 0;
 	var tmp_idx = 0; // For clarity's sake
 	var tmp_vec_idx1 = 0; // Checking one above
@@ -220,22 +219,22 @@ function Game(roomName) {
 	var norm_vec = [vec1[1], vec1[0] * -1]; // To check perpendically from each pawn of the winning five (in both direction)
 	var oppo_vec = [vec1[1] * -1, vec1[0]];
 
-	if (checkBreakable(vec1, max_vec1, norm_vec, oppo_vec) == true)
+	if (this.checkBreakable(pawn_idx, vec1, max_vec1, norm_vec, oppo_vec) == true)
 	    return true;
-	if (checkBreakable(vec2, max_vec2, norm_vec, oppo_vec) == true)
+	if (this.checkBreakable(pawn_idx, vec2, max_vec2, norm_vec, oppo_vec) == true)
 	    return true;
 	return false;
     }
 
     this.checkVectorForFive = function(pawn, vec1, vec2, playNum) {
-	var vec1_max = 5;
+	var vec1_max = 4;
 	var vec2_max = 0;
 
-	while (vec2_max <= 5)
+	while (vec2_max <= 4)
 	{
-	    if (this.checkLineForPawn(pawn, vec1[0][0], vec1[0][1], vec1_max, playNum) == true)
+	    if (this.checkLineForPawn(pawn, vec1[0], vec1[1], vec1_max, playNum) == true)
 	    {
-		if (this.checkLineForPawn(pawn, vec2[0][0], vec2[0][1], vec2_max, playNum) == true)
+		if (this.checkLineForPawn(pawn, vec2[0], vec2[1], vec2_max, playNum) == true)
 		{
 		    if (this.checkIfWon(vec1, vec2, pawn, vec1_max, vec2_max) == true)
 			return false;
