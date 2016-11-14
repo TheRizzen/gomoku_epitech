@@ -213,39 +213,32 @@ function Game(roomName) {
 	return false;
     }
 
+    this.getOppositeVector = function(i) {
+	if (i == 0)
+	    return (3);
+	if (i == 1)
+	    return (6);
+	if (i == 2)
+	    return (7);
+	if (i == 4)
+	    return (5);
+	return (i);
+    }
+
     this.checkIfWon = function(vec1, vec2, pawn_idx, max_vec1, max_vec2) {
-	// Use of 2D perpendicular vector
+	var i = 0;
 
-	var norm_vec = [vec1[1], vec1[0] * -1]; // To check perpendically from each pawn of the winning five (in both direction)
-	var oppo_vec = [vec1[1] * -1, vec1[0]];
-	
-	var vec45 = [vec1[0] * cos1 - vec1[1] * sin1, vec1[0] * sin1 + vec1[1] * cos1]; 
-	var op_vec45 = [vec45[0] * -1, vec45[1] * -1];
-
-	var vec130 = [vec1[0] * cos2 - vec1[1] * sin2, vec1[0] * sin2 + vec1[1] * cos2]; 
-	var op_vec130 = [vec130[0] * -1, vec130[1] * -1];
-
-	console.log("vec1 -> " + vec1);
-	console.log("vec2 -> " + vec2);
-	console.log("norm_vec -> " + norm_vec);
-	console.log("oppo_vec -> " + oppo_vec);
-	console.log("vec45 -> " + vec45);
-	console.log("vec130 -> " + vec130);
-	console.log("op_vec45 -> " + op_vec45);
-	console.log("op_vec130 -> " + op_vec130);
-
-	if (this.checkBreakable(pawn_idx, vec1, max_vec1, norm_vec, oppo_vec) == true)
-	    return true;
-	if (this.checkBreakable(pawn_idx, vec2, max_vec2, norm_vec, oppo_vec) == true)
-	    return true;
-	if (this.checkBreakable(pawn_idx, vec1, max_vec1, vec45, op_vec45) == true)
-	    return true;
-	if (this.checkBreakable(pawn_idx, vec2, max_vec2, vec45, op_vec45) == true)
-	    return true;
-	if (this.checkBreakable(pawn_idx, vec1, max_vec1, vec130, op_vec130) == true)
-	    return true;
-	if (this.checkBreakable(pawn_idx, vec2, max_vec2, vec130, op_vec130) == true)
-	    return true;
+	while (i < 8)
+	{
+	    if (i != vec1 && i != vec2)
+	    {
+		if (this.checkBreakable(pawn_idx, this.moves[vec1], max_vec1, this.moves[i], this.moves[this.getOppositeVector(i)]) == true)
+		    return true;
+		if (this.checkBreakable(pawn_idx, this.moves[vec2], max_vec2, this.moves[i], this.moves[this.getOppositeVector(i)]) == true)
+		    return true;  
+	    }
+	    i += 1;
+	}
 	return false;
     }
 
@@ -255,9 +248,9 @@ function Game(roomName) {
 
 	while (vec2_max <= 4)
 	{
-	    if (this.checkLineForPawn(pawn, vec1[0], vec1[1], vec1_max, playNum) == true)
+	    if (this.checkLineForPawn(pawn, this.moves[vec1][0], this.moves[vec1][1], vec1_max, playNum) == true)
 	    {
-		if (this.checkLineForPawn(pawn, vec2[0], vec2[1], vec2_max, playNum) == true)
+		if (this.checkLineForPawn(pawn, this.moves[vec2][0], this.moves[vec2][1], vec2_max, playNum) == true)
 		{
 		    if (this.checkIfWon(vec1, vec2, pawn, vec1_max, vec2_max) == true)
 			return false;
@@ -273,13 +266,13 @@ function Game(roomName) {
     this.areThereFivePawn = function (pawn_index) {
 	// Problème possible si sur le bord (!!!!!!!!!!!!!!)
 
-	if (this.checkVectorForFive(pawn_index, this.moves[0], this.moves[3], this.activePlayer + 1) == true)
+	if (this.checkVectorForFive(pawn_index, 0, 3, this.activePlayer + 1) == true)
 	    return true;
-	if (this.checkVectorForFive(pawn_index, this.moves[1], this.moves[6], this.activePlayer + 1) == true)
+	if (this.checkVectorForFive(pawn_index, 1, 6, this.activePlayer + 1) == true)
 	    return true;
-	if (this.checkVectorForFive(pawn_index, this.moves[2], this.moves[7], this.activePlayer + 1) == true)
+	if (this.checkVectorForFive(pawn_index, 2, 7, this.activePlayer + 1) == true)
 	    return true;
-	if (this.checkVectorForFive(pawn_index, this.moves[4], this.moves[5], this.activePlayer + 1) == true)
+	if (this.checkVectorForFive(pawn_index, 4, 5, this.activePlayer + 1) == true)
 	    return true;
 	return false;
     };
