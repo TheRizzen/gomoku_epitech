@@ -211,17 +211,40 @@ function Game(roomName) {
 	    i += 1;
 	}
 	return false;
-}
+    }
 
     this.checkIfWon = function(vec1, vec2, pawn_idx, max_vec1, max_vec2) {
 	// Use of 2D perpendicular vector
 
 	var norm_vec = [vec1[1], vec1[0] * -1]; // To check perpendically from each pawn of the winning five (in both direction)
 	var oppo_vec = [vec1[1] * -1, vec1[0]];
+	
+	var vec45 = [vec1[0] * cos1 - vec1[1] * sin1, vec1[0] * sin1 + vec1[1] * cos1]; 
+	var op_vec45 = [vec45[0] * -1, vec45[1] * -1];
+
+	var vec130 = [vec1[0] * cos2 - vec1[1] * sin2, vec1[0] * sin2 + vec1[1] * cos2]; 
+	var op_vec130 = [vec130[0] * -1, vec130[1] * -1];
+
+	console.log("vec1 -> " + vec1);
+	console.log("vec2 -> " + vec2);
+	console.log("norm_vec -> " + norm_vec);
+	console.log("oppo_vec -> " + oppo_vec);
+	console.log("vec45 -> " + vec45);
+	console.log("vec130 -> " + vec130);
+	console.log("op_vec45 -> " + op_vec45);
+	console.log("op_vec130 -> " + op_vec130);
 
 	if (this.checkBreakable(pawn_idx, vec1, max_vec1, norm_vec, oppo_vec) == true)
 	    return true;
 	if (this.checkBreakable(pawn_idx, vec2, max_vec2, norm_vec, oppo_vec) == true)
+	    return true;
+	if (this.checkBreakable(pawn_idx, vec1, max_vec1, vec45, op_vec45) == true)
+	    return true;
+	if (this.checkBreakable(pawn_idx, vec2, max_vec2, vec45, op_vec45) == true)
+	    return true;
+	if (this.checkBreakable(pawn_idx, vec1, max_vec1, vec130, op_vec130) == true)
+	    return true;
+	if (this.checkBreakable(pawn_idx, vec2, max_vec2, vec130, op_vec130) == true)
 	    return true;
 	return false;
     }
