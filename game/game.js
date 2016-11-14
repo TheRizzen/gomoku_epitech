@@ -179,6 +179,11 @@ function Game(roomName) {
 	var tmp_vec_idx2 = 0; // checking one below
 	var tmp_vec_idx3 = 0; // checking 2 below or above (depending on the results of the last two)
 
+	console.log("");
+	console.log("Vector = " + vec);
+	console.log("Norm_vec = " + norm_vec);
+	console.log("Oppo_vec = " + oppo_vec);
+	console.log("Pawn_idx : " + pawn_idx);
 	while (i < max)
 	{
 	    // Node from the winning line
@@ -190,23 +195,24 @@ function Game(roomName) {
 	    // Perpendicular node (negative)
 	    tmp_vec_idx2 = tmp_idx + oppo_vec[0] + (oppo_vec[1] * this.col_nb);
 	    
-/*	    console.log("node from line : " + tmp_idx);
+	    console.log("node from line : " + tmp_idx);
 	    console.log("pos perp node : " + tmp_vec_idx1 + " -> " + this.map[tmp_vec_idx1]);
-	    console.log("neg perp node : " + tmp_vec_idx2 + " -> " + this.map[tmp_vec_idx2]);*/
-	    if (this.map[tmp_vec_idx1] == this.activePlayer + 1 || (this.map[tmp_vec_idx2] != this.activePlayer + 1 && this.map[tmp_vec_idx2] != 0))
+	    console.log("neg perp node : " + tmp_vec_idx2 + " -> " + this.map[tmp_vec_idx2]);
+	    if (this.map[tmp_vec_idx1] == this.activePlayer + 1 && (this.map[tmp_vec_idx2] != this.activePlayer + 1 && this.map[tmp_vec_idx2] != 0))
 	    {
-		tmp_vec_idx3 = this.getIndexWithVector(tmp_idx, norm_vec[0], norm_vec[1], 1);// Second allied pawn is in opposite vector direction
+		tmp_vec_idx3 = this.getIndexWithVector(tmp_idx, norm_vec[0], norm_vec[1], 1);// Second allied pawn is in normal vector direction
              	// check si bonne position pour être dans un cinq cassable (actuellement -> X00*) | ne reste plus qu'à checker l'étoile
-		if (this.map[tmp_vec_idx3] != this.activePlayer + 1 && this.map[tmp_vec_idx3] != 0)
+		console.log("NORMAL pos 3eme index node : " + tmp_vec_idx3 + " -> " + this.map[tmp_vec_idx3])
+		if (this.map[tmp_vec_idx3] == 0)
 		    return true;
 	    }
-	    else if (this.map[tmp_vec_idx1] != 0 || this.map[tmp_vec_idx2] == this.activePlayer + 1)
+	    else if (this.map[tmp_vec_idx2] == this.activePlayer + 1 && (this.map[tmp_vec_idx1] != this.activePlayer + 1 && this.map[tmp_vec_idx1] != 0))
 	    {
 		tmp_vec_idx3 = this.getIndexWithVector(tmp_idx, oppo_vec[0], oppo_vec[1], 1);// Second allied pawn is in opposite vector direction
 		// check si bonne position pour être dans un cinq cassable (actuellement -> X00*) | ne reste plus qu'à checker l'étoile
-		if (this.map[tmp_vec_idx3] != this.activePlayer + 1 && this.map[tmp_vec_idx3] != 0)
-		    if (this.map[tmp_vec_idx2] == this.activePlayer + 1)
-			return true;
+		console.log("OPPOSITE pos 3eme index node : " + tmp_vec_idx3 + " -> " + this.map[tmp_vec_idx3])
+		if (this.map[tmp_vec_idx3] == 0)
+		    return true;
 	    }
 	    i += 1;
 	}
@@ -228,9 +234,9 @@ function Game(roomName) {
     this.checkIfWon = function(vec1, vec2, pawn_idx, max_vec1, max_vec2) {
 	var i = 0;
 
-	while (i < 8)
+	while (i <= 4)
 	{
-	    if (i != vec1 && i != vec2)
+	    if (i != vec1 && i != 3)
 	    {
 		if (this.checkBreakable(pawn_idx, this.moves[vec1], max_vec1, this.moves[i], this.moves[this.getOppositeVector(i)]) == true)
 		    return true;
