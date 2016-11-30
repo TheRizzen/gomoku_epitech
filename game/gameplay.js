@@ -7,9 +7,10 @@ module.exports = {
 	    var taken = game.arePawnTaken(x, y);
 	    var takenLen = taken.length;
 	    
-	    if (game.gameOngoing == 2 && takenLen < 0) {
+	    if (game.gameOngoing == 2 && takenLen < 0)
 		console.log("Partie Perdu : L'ennemie à posé 5 pions alignés !");
-	    }
+	    else
+		game.gameOngoing = 1;
 
 	    for (var i = 0; i < takenLen; i += 4) {
 		io.to(game.room).emit('eatpawn', {x1: taken[i], y1: taken[i + 1], x2: taken[i + 2], y2: taken[i + 3], player: player.id, nb_eaten: player.pawn});
