@@ -201,17 +201,29 @@ function Game(roomName) {
 	    if (this.map[tmp_vec_idx1] == this.activePlayer + 1 && (this.map[tmp_vec_idx2] != this.activePlayer + 1 && this.map[tmp_vec_idx2] != 0))
 	    {
 		tmp_vec_idx3 = this.getIndexWithVector(tmp_idx, norm_vec[0], norm_vec[1], 1);// Second allied pawn is in normal vector direction
-             	// check si bonne position pour être dans un cinq cassable (actuellement -> X00*) | ne reste plus qu'à checker l'étoile
-		/*console.log("NORMAL pos 3eme index node : " + tmp_vec_idx3 + " -> " + this.map[tmp_vec_idx3])*/
+//		console.log("NORMAL pos 3eme index node : " + tmp_vec_idx3 + " -> " + this.map[tmp_vec_idx3])
 		if (this.map[tmp_vec_idx3] == 0)
+		    return true;
+	    }
+	    else if (this.map[tmp_vec_idx1] == 0 && this.map[tmp_vec_idx2] == this.activePlayer + 1)
+	    {
+		tmp_vec_idx3 = this.getIndexWithVector(tmp_idx, oppo_vec[0], oppo_vec[1], 1);// Second allied pawn is in normal vector direction
+//		console.log("OPPOSITE pos 3eme index node : " + tmp_vec_idx3 + " -> " + this.map[tmp_vec_idx3])
+		if (this.map[tmp_vec_idx3] != 0 && this.map[tmp_vec_idx3] != this.activePlayer + 1)
 		    return true;
 	    }
 	    else if (this.map[tmp_vec_idx2] == this.activePlayer + 1 && (this.map[tmp_vec_idx1] != this.activePlayer + 1 && this.map[tmp_vec_idx1] != 0))
 	    {
 		tmp_vec_idx3 = this.getIndexWithVector(tmp_idx, oppo_vec[0], oppo_vec[1], 1);// Second allied pawn is in opposite vector direction
-		// check si bonne position pour être dans un cinq cassable (actuellement -> X00*) | ne reste plus qu'à checker l'étoile
-		console.log("OPPOSITE pos 3eme index node : " + tmp_vec_idx3 + " -> " + this.map[tmp_vec_idx3])
+//		console.log("OPPOSITE pos 3eme index node : " + tmp_vec_idx3 + " -> " + this.map[tmp_vec_idx3])
 		if (this.map[tmp_vec_idx3] == 0)
+		    return true;
+	    }
+	    else if (this.map[tmp_vec_idx2] == 0 && this.map[tmp_vec_idx1] == this.activePlayer + 1)
+	    {
+		tmp_vec_idx3 = this.getIndexWithVector(tmp_idx, norm_vec[0], norm_vec[1], 1);// Second allied pawn is in opposite vector direction
+//		console.log("NORMAL pos 3eme index node : " + tmp_vec_idx3 + " -> " + this.map[tmp_vec_idx3])
+		if (this.map[tmp_vec_idx3] != 0 && this.map[tmp_vec_idx3] != this.activePlayer + 1)
 		    return true;
 	    }
 	    i += 1;
@@ -260,6 +272,7 @@ function Game(roomName) {
 		{
 		    if (this.checkIfWon(vec1, vec2, pawn, vec1_max, vec2_max) == true)
 		    {
+//			console.log("Position de cinq cassables !");
 			// change attributes, meaning that next play decide game
 			this.gameOngoing = 2;
 			return false;
