@@ -179,11 +179,11 @@ function Game(roomName) {
 	var tmp_vec_idx2 = 0; // checking one below
 	var tmp_vec_idx3 = 0; // checking 2 below or above (depending on the results of the last two)
 
-	console.log("");
+/*	console.log("");
 	console.log("Vector = " + vec);
 	console.log("Norm_vec = " + norm_vec);
 	console.log("Oppo_vec = " + oppo_vec);
-	console.log("Pawn_idx : " + pawn_idx);
+	console.log("Pawn_idx : " + pawn_idx);*/
 	while (i < max)
 	{
 	    // Node from the winning line
@@ -195,14 +195,14 @@ function Game(roomName) {
 	    // Perpendicular node (negative)
 	    tmp_vec_idx2 = tmp_idx + oppo_vec[0] + (oppo_vec[1] * this.col_nb);
 	    
-	    console.log("node from line : " + tmp_idx);
+/*	    console.log("node from line : " + tmp_idx);
 	    console.log("pos perp node : " + tmp_vec_idx1 + " -> " + this.map[tmp_vec_idx1]);
-	    console.log("neg perp node : " + tmp_vec_idx2 + " -> " + this.map[tmp_vec_idx2]);
+	    console.log("neg perp node : " + tmp_vec_idx2 + " -> " + this.map[tmp_vec_idx2]);*/
 	    if (this.map[tmp_vec_idx1] == this.activePlayer + 1 && (this.map[tmp_vec_idx2] != this.activePlayer + 1 && this.map[tmp_vec_idx2] != 0))
 	    {
 		tmp_vec_idx3 = this.getIndexWithVector(tmp_idx, norm_vec[0], norm_vec[1], 1);// Second allied pawn is in normal vector direction
              	// check si bonne position pour être dans un cinq cassable (actuellement -> X00*) | ne reste plus qu'à checker l'étoile
-		console.log("NORMAL pos 3eme index node : " + tmp_vec_idx3 + " -> " + this.map[tmp_vec_idx3])
+		/*console.log("NORMAL pos 3eme index node : " + tmp_vec_idx3 + " -> " + this.map[tmp_vec_idx3])*/
 		if (this.map[tmp_vec_idx3] == 0)
 		    return true;
 	    }
@@ -259,7 +259,11 @@ function Game(roomName) {
 		if (this.checkLineForPawn(pawn, this.moves[vec2][0], this.moves[vec2][1], vec2_max, playNum) == true)
 		{
 		    if (this.checkIfWon(vec1, vec2, pawn, vec1_max, vec2_max) == true)
+		    {
+			// change attributes, meaning that next play decide game
+			this.gameOngoing = 2;
 			return false;
+		    }
 		    return true;
 		}
 	    }
