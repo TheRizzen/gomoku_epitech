@@ -94,6 +94,7 @@ function testIA() {
 	return i;
     }
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     this.assignValue = function(x, y, map)
     {
@@ -170,19 +171,24 @@ function testIA() {
 	var x2 = 0;
 	var y2 = 0;
 >>>>>>> Stashed changes
+=======
+    this.assignValue = function(x, y)
+    {
+	var i = 0;
+	var value = 0;
+>>>>>>> a8d67134341ce7774a9d580ed3d094989cbee1f4
 
 	while (i < 8)
 	{
 	    if ((x + this.moves[i][0] >= 0) && (y + this.moves[i][1] >= 0) && 
 	       (x + this.moves[i][0] <= 18) && (y + this.moves[i][1] <= 18))
 	    {
-		xmp = x + this.moves[i][0];
-		ymp = y + this.moves[i][1];
-		if (map[xmp][ymp] != 0)
+		if (this.map[x + this.moves[i][0]][y + this.moves[i][1]] != 0)
 		    value += 1;
 	    }
 	    i += 1;
 	}
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 	return value;
 =======
@@ -243,6 +249,9 @@ function testIA() {
 	i += 1;
 	return [x, y, value];
 >>>>>>> Stashed changes
+=======
+	return [x, y, value];
+>>>>>>> a8d67134341ce7774a9d580ed3d094989cbee1f4
     }
 	
     this.determineBestMove = function(resArray, valArray) {
@@ -275,6 +284,7 @@ function testIA() {
 		{
 		    if (this.isTherePawnAround(x, y) == 1)
 		    {
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 			valueArray[arrInc] = this.assignValue(x, y, this.map);
 =======
@@ -285,6 +295,9 @@ function testIA() {
 			valueArray[arrInc] = this.assignValue(x, y, dupMap, pawn_type);
 >>>>>>> a8d67134341ce7774a9d580ed3d094989cbee1f4
 >>>>>>> Stashed changes
+=======
+			valueArray[arrInc] = this.assignValue(x, y, dupMap, pawn_type);
+>>>>>>> a8d67134341ce7774a9d580ed3d094989cbee1f4
 			resultArray[arrInc] = [x, y];
 			arrInc += 1;
 		    }
