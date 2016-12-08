@@ -195,7 +195,7 @@ function testIA() {
 		    this.map[i][j] = pawn_type;
 		    tmp = this.getMin(x, y, (pawn_type == 1 ? 2 : 1), depth - 1);
 		    
-		    if (tmp[2] > max)
+		    if (tmp[2] > max && Math.floor((Math.random() * 10) + 1) % 2 == 0)
 		    {
 			maxI = i;
 			maxj = j;
@@ -231,7 +231,7 @@ function testIA() {
 		    this.map[i][j] = pawn_type;
 		    tmp = this.getMax(x, y, (pawn_type == 1 ? 2 : 1), depth - 1);
 
-		    if (tmp[2] < min)
+		    if (tmp[2] < min && Math.floor((Math.random() * 10) + 1) % 2 == 1)
 		    {
 			maxI = i;
 			maxj = j;
@@ -263,7 +263,7 @@ function testIA() {
 		{
 		    this.map[i][j] = 1;
 		    tmp = this.getMin(i, j, pawn_type, depth - 1);
-		    if (tmp[2] > max)
+		    if (tmp[2] > max && Math.floor((Math.random() * 10) + 1) % 2 == 0)
 		    {
 			max = tmp[2];
 			maxX = i;
@@ -282,7 +282,7 @@ function testIA() {
 	if (this.emptyMap() == true)
 	    return ([18 / 2, 18 / 2]);
 
-	var depth = 4;
+	var depth = 2;
 	return this.minMaxLoop(depth, pawn_type);
     }
 };
