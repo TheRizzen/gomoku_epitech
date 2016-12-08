@@ -13,7 +13,7 @@ var putMessage = function(text) {
 socket.on('connected', function (data) {
   playerid = data.id;
   putMessage('[INFO] Player #' + data.id + ' just joined Room #' + data.room);
-  if (data.user == 1) {
+  if (data.id == 1) {
     putMessage('[INFO] Waiting for the Player #2 ...');
   }
 });
