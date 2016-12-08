@@ -6,12 +6,6 @@
   background: #eee;
 }
 
-#players {
-  position: absolute;
-  left:5%;
-  top: 5%;
-}
-
 #board {
   position: absolute;
   left 50%;
@@ -43,14 +37,13 @@ form {
 
 form input {
   border: 0;
-  padding: 10px;
+  padding: 13px;
   width: 90%;
-  margin-right: .5%;
+  margin-right: 0.8%;
 }
 
 form button {
   width: 9%;
-  background: rgb(130, 224, 255);
   border: none;
   position: relative;
 }

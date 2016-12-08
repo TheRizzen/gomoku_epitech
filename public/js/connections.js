@@ -3,43 +3,39 @@ var chatlog = document.getElementById('chatlog');
 var playerid = 0;
 var onGoing = false;
 
-socket.on('connected', function (data) {
-  var elem2 = document.createElement('li');
-  elem2.appendChild(document.createTextNode('Room #' + data.room));
-  chatlog.appendChild(elem2);
+var putMessage = function(text) {
   var elem = document.createElement('li');
-  elem.appendChild(document.createTextNode('User #' + data.user));
+  elem.setAttribute('class', 'mdl-list__item');
+  elem.appendChild(document.createTextNode(text));
   chatlog.appendChild(elem);
-  playerid = data.user;
+};
+
+socket.on('connected', function (data) {
+  playerid = data.id;
+  putMessage('[INFO] Player #' + data.id + ' just joined Room #' + data.room);
   if (data.user == 1) {
-    var elem = document.createElement('li');
-    elem.appendChild(document.createTextNode('Waiting for the player #2 ...'));
-    chatlog.appendChild(elem);
+    putMessage('[INFO] Waiting for the Player #2 ...');
   }
 });
 
 socket.on('starting', function () {
-  var elem = document.createElement('li');
-  elem.appendChild(document.createTextNode('Room is full, Game is about to begin...'));
-  chatlog.appendChild(elem);
+  putMessage('[INFO] Room is full, Game is about to begin...');
   onGoing = true;
 });
 
 socket.on('disconnected', function(data){
-  var elem = document.createElement('li');
-  elem.appendChild(document.createTextNode('Player #' + data.name + ' has left. Reason: ' + data.reason));
-  chatlog.appendChild(elem);
+  putMessage('[INFO] Player #' + data.name + ' has left the Room. Reason: ' + data.reason);
   onGoing = false;
 });
 
-$('form').submit(function() {
-  socket.emit('message', {user: playerid, message: $('#message').val()});
-  $('#message').val('');
+document.getElementById('chatinput').addEventListener('submit', function(e) {
+  var input = document.getElementById('message');
+  e.preventDefault();
+  socket.emit('message', {user: playerid, message: input.value});
+  input.value = '';
   return (false);
 });
 
 socket.on('message', function(data) {
-  var elem = document.createElement('li');
-  elem.appendChild(document.createTextNode('Player #' + data.user + ': ' + data.message));
-  chatlog.appendChild(elem);
+  putMessage('[CHAT] Player #' + data.id + ': ' + data.message);
 });
