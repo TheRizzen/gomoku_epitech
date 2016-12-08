@@ -41,6 +41,7 @@ function testIA() {
 	    'eatpawn' : 50,
 	    '2for2pawns' : 25,
 	    'middle_xy' : 10,
+	    'pawnCoef' : 20,
      };
 
     this.valueMap = [];
@@ -210,7 +211,7 @@ function testIA() {
 	// je Peux manger deux pions
 	if (this.arePawnTaken(x, y, player, this.map) == true)
 	{
-	    value += (this.pawnTaken * 20)
+	    value += (this.pawnTaken * this.value['pawnCoef'])
 	}
 
 	if (x >= 7 && x <= 12)
