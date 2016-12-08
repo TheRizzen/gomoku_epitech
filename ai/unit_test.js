@@ -10,6 +10,8 @@ function testIA() {
         [-1, 1],
         ];
 
+    this.pawnTaken = 0;
+    
     this.map = [
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -31,6 +33,15 @@ function testIA() {
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ];
+
+        this.value = {
+	    'eaten' : 42,
+	    '4pawns' : 150,
+	    '3pawns' : 100,
+	    'eatpawn' : 50,
+	    '2for2pawns' : 25,
+	    'middle_xy' : 10,
+     };
 
     this.valueMap = [];
     
@@ -94,25 +105,9 @@ function testIA() {
 	return i;
     }
 
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-    this.assignValue = function(x, y, map)
-    {
-	var i = 0;
-	var value = 0;
-	var xmp = 0;
-	var ymp = 0;
-=======
-<<<<<<< HEAD
     this.checkLineForPawn = function(x, y, inc_x, inc_y, max, tileType) {
 	var i = 0;
 	var cnt = 0;
-=======
-    this.assignValue = function(x, y)
-    {
-	var i = 0;
-	var value = 0;
->>>>>>> a8d67134341ce7774a9d580ed3d094989cbee1f4
 
 	while (cnt < max)
 	{
@@ -162,47 +157,62 @@ function testIA() {
 	return (x + y * this.col_nb);
     }
     
-    this.arePawnTaken = function(x, y, player, map) {
+    this.getVectorVal = function(x, vector, inc) {
+	return (x + (vector == 0 ? vector : (vector > 0 ? vector + inc : vector - inc)));
+}
+
+    this.vulnerablePawn = function(x, y, player, player2, map) {
 	var i = 0;
-	
-	var pawn_index = this.get1DP(x, y);
-	var taken = [];
-	var nb = 0;
-	var x2 = 0;
-	var y2 = 0;
->>>>>>> Stashed changes
-=======
-    this.assignValue = function(x, y)
-    {
-	var i = 0;
-	var value = 0;
->>>>>>> a8d67134341ce7774a9d580ed3d094989cbee1f4
 
 	while (i < 8)
 	{
-	    if ((x + this.moves[i][0] >= 0) && (y + this.moves[i][1] >= 0) && 
-	       (x + this.moves[i][0] <= 18) && (y + this.moves[i][1] <= 18))
-	    {
-		if (this.map[x + this.moves[i][0]][y + this.moves[i][1]] != 0)
-		    value += 1;
-	    }
+	    if (map[this.getVectorVal(x, this.moves[i][0], 0)][this.getVectorVal(y, this.moves[i][1], 0)] == player)
+		if (map[this.getVectorVal(x, this.moves[i][0], 1)][this.getVectorVal(y, this.moves[i][1], 1)] == player2)
+		    if (map[this.getVectorVal(x, this.moves[(i > 3 ? i - 4 : i + 4)][0], 1)][this.getVectorVal(y, this.moves[(i > 3 ? i - 4 : i + 4)][1], 1)] == 0)
+			return true;
 	    i += 1;
 	}
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-	return value;
-=======
 	return false;
-    };
+    }
 
+    this.arePawnTaken = function(x, y, player, map) {
+	var i = 0;
 	
-    this.assignValue = function(x, y, map, player) {
+	while (i < 8)
+        {
+            if (map[this.getVectorVal(x, this.moves[i][0], 0)][this.getVectorVal(y, this.moves[i][1], 0)] != player && map[x + this.moves[i][0]][y + this.moves[i][1]] != 0)
+                if (map[this.getVectorVal(x, this.moves[i][0], 1)][this.getVectorVal(y, this.moves[i][1], 1)] != player &&
+		    map[this.getVectorVal(x, this.moves[i][0], 1)][this.getVectorVal(y, this.moves[i][1], 1)] != 0)
+                    if (map[this.getVectorVal(x, this.moves[i][0], 2)][this.getVectorVal(y, this.moves[i][1], 2)] == player)
+            {
+		return true;
+            }
+            i += 1;
+        }
+        return false;
+    }
+
+    this.assignValue = function(x, y, player) {
 	var value = 0;
 	var player2 = 0;
+	// DUPLICATE MAP TO CHANGE FREELY
 	var dupMap = this.map.slice(0);
 
-	console.log('[' + x + ']' + '[' + y + ']');
+//	console.log('[' + x + ']' + '[' + y + ']');
 	player == 1 ? player2 = 2 : player2 = 1;
+	
+	// Je peux me faire manger
+	if (this.vulnerablePawn(x, y, player, player2, this.map) == true)
+	{
+	    value -= this.value['eaten'];
+	}
+	
+	// je Peux manger deux pions
+	if (this.arePawnTaken(x, y, player, this.map) == true)
+	{
+	    value += (this.pawnTaken * 20)
+	}
+
 	if (x >= 7 && x <= 12)
 	    value += this.value['middle_xy'];
 	if (y >= 7 && y <= 12)
@@ -217,117 +227,9 @@ function testIA() {
 	{
 	    value += this.value['3pawns'];
 	}
-	//check si on se fait manger ou non après avoir poser un pion
-	if ((this.arePawnTaken(x, y, player, dupMap) == true))
-	    value += this.value['eatpawn'];
-	//CETTE PARTIE TROUVE DES ERREURS OU FAUT PAS PCK TON CHECK SI TU PEUX MANGER REGARDEr pas ALL CASES
-/*	console.log('CHECK bad Moves : ');
-	dupMap[y][x] = player;
-	if ((this.arePawnTaken(x - 1, y, player2, dupMap) == true) && (this.areThereFivePawn(x - 1, y, 3, player) == false))
-	{
-	    value -= this.value['2for2pawns'];
-	    console.log('enter bad move 1');
-	}
-	if ((this.arePawnTaken(x, y - 1, player2, dupMap) == true) && (this.areThereFivePawn(x, y - 1, 3, player) == false))
-	{
-	    value -= this.value['2for2pawns'];
-	    console.log('enter bad move 2');
-	}
-	if ((this.arePawnTaken(x + 1, y, player2, dupMap) == true) && (this.areThereFivePawn(x + 1, y, 3, player) == false))
-	{
-	    value -= this.value['2for2pawns'];
-	    console.log('enter bad move 3');
-	}
-	if ((this.arePawnTaken(x, y + 1, player2, dupMap) == true) && (this.areThereFivePawn(x, y + 1, 3, player) == false))
-	{
-	    value -= this.value['2for2pawns'];
-	    console.log('enter bad move 4');
-	}
-	dupMap[y][x] = 0;*/
-	if (this.map[x + this.moves[i][0]][y + this.moves[i][1]] != 0)
-	    value += 1;
-	i += 1;
-	return [x, y, value];
->>>>>>> Stashed changes
-=======
-	return [x, y, value];
->>>>>>> a8d67134341ce7774a9d580ed3d094989cbee1f4
-    }
 	
-    this.determineBestMove = function(resArray, valArray) {
-	return [0, 0];
+	return [x, y, value];
     }
-    
-/*    this.minMaxLoop = function(depth, supResult, supValue, pawn_type, minMax) {
-	var y = 0;
-	var x = 0;
-	var arrInc = 0;
-	var resultArray = [];
-	var valueArray = [];
-	var dupMap;
-
-	if (supResult[0] != 0 && supResult[1] != 0)
-	{
-	    dupMap = this.map.slice(0);
-	    console.log(supResult);
-	    dupMap[supResult[0]][supResult[1]] == pawn_type;
-	}
-	else
-	    dupMap = this.map;
-
-	if (depth > 0)
-	{
-	    while (x < 19)
-	    {
-		y = 0;
-		while (y < 19)
-		{
-		    if (this.isTherePawnAround(x, y) == 1)
-		    {
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-			valueArray[arrInc] = this.assignValue(x, y, this.map);
-=======
-<<<<<<< HEAD
-			console.log("x : " + x + " | y : " + y);
-			valueArray[arrInc] = this.assignValue(x, y, this.map, 1);
-=======
-			valueArray[arrInc] = this.assignValue(x, y, dupMap, pawn_type);
->>>>>>> a8d67134341ce7774a9d580ed3d094989cbee1f4
->>>>>>> Stashed changes
-=======
-			valueArray[arrInc] = this.assignValue(x, y, dupMap, pawn_type);
->>>>>>> a8d67134341ce7774a9d580ed3d094989cbee1f4
-			resultArray[arrInc] = [x, y];
-			arrInc += 1;
-		    }
-		    y += 1;
-		}
-		x += 1;
-	    }
-
-	    if (arrInc > 0)
-	    {
-		var tmpInc = arrInc + 1;
-		var recursResult = [];
-		var resultInc = 0;
-
-		while (tmpInc > 0)
-		{
-		    recursResult[resultInc] = this.minMaxLoop(depth - 1, valueArray[tmpInc - 1], supResult[tmpInc - 1], pawn_type == 1 ? 2 : 1, minMax ^ 1);
-		    tmpInc -= 1;
-		    resultInc += 1;
-		}
-		
-	    }
-	}
-
-	console.log(valueArray);
-	console.log(resultArray);
-
-	var result = this.determineBestMove(resultArray, valueArray, minMax);
-	return result;
-    }*/
     
     this.getMax = function(x, y, pawn_type, depth) {
 	if (depth == 0)
@@ -433,11 +335,12 @@ function testIA() {
 	return [maxX, maxY];
     }
 
-    this.findPlay = function(pawn_type) {
+    this.findPlay = function(pawn_type, pawnTaken) {
 	if (this.emptyMap() == true)
 	    return ([18 / 2, 18 / 2]);
 
 	var depth = 2;
+	this.pawnTaken = pawnTaken;
 	return this.minMaxLoop(depth, pawn_type);
     }
 };

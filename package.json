@@ -16,5 +16,8 @@
     "express": "^4.14.0",
     "serve-favicon": "^2.3.2",
     "socketio": "^1.0.0"
+  },
+  "devDependencies": {
+    "performance-now": "^0.2.0"
   }
 }
