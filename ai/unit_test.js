@@ -1,14 +1,4 @@
 function testIA() {
-    this.value = {
-	'4pawns' : 150,
-	'3pawns' : 100,
-	'eatpawn' : 50,
-	'2for2pawns' : 25,
-	'middle_xy' : 10,
-    };
-
-    this.col_nb = 19;
-    
     this.moves = [
 	[1, 1],
         [0, 1],
@@ -18,21 +8,17 @@ function testIA() {
         [0, -1],
 	[-1, 0],
         [-1, 1],
-    ];
-    
-    this.get1DP = function(x, y) {
-	return (x + y * this.col_nb);
-    }
-    
+        ];
+
     this.map = [
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-	[0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -60,7 +46,7 @@ function testIA() {
 	    i += 1;
 	}
 	return 0;
-     }
+    }
 
     this.clearArray = function(array) {
 	var i = 0;
@@ -108,140 +94,25 @@ function testIA() {
 	return i;
     }
 
-    this.checkLineForPawn = function(x, y, inc_x, inc_y, max, tileType) {
+    this.assignValue = function(x, y, map)
+    {
 	var i = 0;
-	var cnt = 0;
-
-	while (cnt < max)
-	{
-/*	    console.log('[' + x + ']' + '[' + y + ']');
-	    console.log('vecteur = ' + inc_x + '/'+ inc_y);
-	    console.log("MAp : " + this.map[(x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)))][(y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)))])
-	    console.log("X : " + (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) + " Y : "  + (y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i))))*/
-	    if (this.map[(x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)))][(y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)))] != tileType)
-		return false;
-	    i += 1;
-	    cnt += 1;
-	}
-	return true;
-    }
-	
-    this.checkVectorForFive = function(x, y, vec1, vec2, playNum, size) {
-	var vec1_max = size;
-	var vec2_max = 0;
-
-	while (vec2_max <= size)
-	{
-	    if (this.checkLineForPawn(x, y, this.moves[vec1][0], this.moves[vec1][1], vec1_max, playNum) == true)
-	    {
-		if (this.checkLineForPawn(x, y, this.moves[vec2][0], this.moves[vec2][1], vec2_max, playNum) == true)
-		    return true;
-	    }
-	    vec1_max -= 1;
-	    vec2_max += 1;
-	}
-	return false;
-    };
-    
-    this.areThereFivePawn = function (x, y, size, player) {
-	// Problème possible si sur le bord (!!!!!!!!!!!!!!)
-	if (this.checkVectorForFive(x, y, 0, 4, player, size) == true)
-	    return true;
-	if (this.checkVectorForFive(x, y, 1, 5, player, size) == true)
-	    return true;
-	if (this.checkVectorForFive(x, y, 2, 6, player, size) == true)
-	    return true;
-	if (this.checkVectorForFive(x, y, 3, 7, player, size) == true)
-	    return true;
-	return false;
-    };
-
-    this.get1DP = function(x, y) {
-	return (x + y * this.col_nb);
-    }
-    
-    this.arePawnTaken = function(x, y, player, map) {
-	var i = 0;
-	
-	var pawn_index = this.get1DP(x, y);
-	var taken = [];
-	var nb = 0;
-	var x2 = 0;
-	var y2 = 0;
+	var value = 0;
+	var xmp = 0;
+	var ymp = 0;
 
 	while (i < 8)
 	{
-	    if (map[pawn_index + this.moves[i][0] + (this.moves[i][1] * this.col_nb)] != player && map[pawn_index + this.moves[i][0] + (this.moves[i][1] * this.col_nb)] != 0)
-	    {		
-		if (map[pawn_index + (this.moves[i][0] == 0 ? this.moves[i][0] : (this.moves[i][0] > 0 ? this.moves[i][0] + 1 : this.moves[i][0] - 1)) + ((this.moves[i][1] == 0 ? this.moves[i][1] : (this.moves[i][1] > 0 ? this.moves[i][1] + 1 : this.moves[i][1] - 1)) * this.col_nb)] != player && map[pawn_index + (this.moves[i][0] == 0 ? this.moves[i][0] : (this.moves[i][0] > 0 ? this.moves[i][0] + 1 : this.moves[i][0] - 1)) + ((this.moves[i][1] == 0 ? this.moves[i][1] : (this.moves[i][1] > 0 ? this.moves[i][1] + 1 : this.moves[i][1] - 1)) * this.col_nb)] != 0)
-		{
-/*		    if (map[pawn_index + (this.moves[i][0] == 0 ? this.moves[i][0] : (this.moves[i][0] > 0 ? this.moves[i][0] + 2 : this.moves[i][0] - 2)) + ((this.moves[i][1] == 0 ? this.moves[i][1] : (this.moves[i][1] > 0 ? this.moves[i][1] + 2 : this.moves[i][1] - 2)) * this.col_nb)] == player)*/
-		    y2 = (y + (this.moves[i][1] == 0 ? this.moves[i][1] : (this.moves[i][1] > 0 ? this.moves[i][1] + 2 : this.moves[i][1] - 2)));
-		    x2 = (x + (this.moves[i][0] == 0 ? this.moves[i][0] : (this.moves[i][0] > 0 ? this.moves[i][0] + 2 : this.moves[i][0] - 2)));
-		    console.log('solution en : map[' + x2 + '][' + y2 + ']');
-		    if (x2 >= 0 && y2 >= 0 && map[x2][y2] == player)
-		    {
-			return true;
-		    }
-		}
+	    if ((x + this.moves[i][0] >= 0) && (y + this.moves[i][1] >= 0) && 
+	       (x + this.moves[i][0] <= 18) && (y + this.moves[i][1] <= 18))
+	    {
+		xmp = x + this.moves[i][0];
+		ymp = y + this.moves[i][1];
+		if (map[xmp][ymp] != 0)
+		    value += 1;
 	    }
 	    i += 1;
 	}
-	return false;
-    };
-
-	
-    this.assignValue = function(x, y, map, player) {
-	var value = 0;
-	var player2 = 0;
-	var dupMap = this.map.slice(0);
-
-	console.log('[' + x + ']' + '[' + y + ']');
-	player == 1 ? player2 = 2 : player2 = 1;
-	if (x >= 7 && x <= 12)
-	    value += this.value['middle_xy'];
-	if (y >= 7 && y <= 12)
-	    value += this.value['middle_xy'];
-	//check si deja 4 en lignes pour apporter le point gagnant ?
-	if ((this.areThereFivePawn(x, y, 4, player)) == true)
-	{
-	    value += this.value['4pawns'];
-	}
-	//check si deja 3 en ligne et aucun autre pion ennemie aux extremité une future defaite a l'ennemie	
-	if ((this.areThereFivePawn(x, y, 3, player)) == true)
-	{
-	    value += this.value['3pawns'];
-	}
-	//check si on se fait manger ou non après avoir poser un pion
-	if ((this.arePawnTaken(x, y, player, dupMap) == true))
-	    value += this.value['eatpawn'];
-	//CETTE PARTIE TROUVE DES ERREURS OU FAUT PAS PCK TON CHECK SI TU PEUX MANGER REGARDEr pas ALL CASES
-/*	console.log('CHECK bad Moves : ');
-	dupMap[y][x] = player;
-	if ((this.arePawnTaken(x - 1, y, player2, dupMap) == true) && (this.areThereFivePawn(x - 1, y, 3, player) == false))
-	{
-	    value -= this.value['2for2pawns'];
-	    console.log('enter bad move 1');
-	}
-	if ((this.arePawnTaken(x, y - 1, player2, dupMap) == true) && (this.areThereFivePawn(x, y - 1, 3, player) == false))
-	{
-	    value -= this.value['2for2pawns'];
-	    console.log('enter bad move 2');
-	}
-	if ((this.arePawnTaken(x + 1, y, player2, dupMap) == true) && (this.areThereFivePawn(x + 1, y, 3, player) == false))
-	{
-	    value -= this.value['2for2pawns'];
-	    console.log('enter bad move 3');
-	}
-	if ((this.arePawnTaken(x, y + 1, player2, dupMap) == true) && (this.areThereFivePawn(x, y + 1, 3, player) == false))
-	{
-	    value -= this.value['2for2pawns'];
-	    console.log('enter bad move 4');
-	}
-	dupMap[y][x] = 0;*/
-	if (value < 0)
-	    value = 0;
-	console.log(value);
 	return value;
     }
     
@@ -265,8 +136,7 @@ function testIA() {
 		{
 		    if (this.isTherePawnAround(x, y) == 1)
 		    {
-			console.log("x : " + x + " | y : " + y);
-			valueArray[arrInc] = this.assignValue(x, y, this.map, 1);
+			valueArray[arrInc] = this.assignValue(x, y, this.map);
 			resultArray[arrInc] = [x, y];
 			arrInc += 1;
 		    }

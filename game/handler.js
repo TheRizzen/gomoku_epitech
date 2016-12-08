@@ -5,10 +5,10 @@ var chat = require('./chat.js');
 
 module.exports = function(io, games) {
 
-    io.on('connection', function(socket) {
-	join(io, socket, games);
-	leave(io, socket, games);
-	putpawn(io, socket, games);
-	chat(io, socket, games);
+  io.on('connection', function(socket) {
+    join(io, socket, games);
+    leave(io, socket, games);
+    putpawn(io, socket, games);
+    chat(io, socket, games);
   });
 };
