@@ -1,3 +1,9 @@
+body {
+  background-image: url("../images/bambou_zen.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 #chatlog li {
   padding 5px 10px;
 }
@@ -7,15 +13,15 @@
 }
 
 #board {
+  margin: 5%;
   position: absolute;
   left 50%;
 }
 
 #chatbox {
   position: absolute;
-  top: 5%;
-  right: 12%;
-  border-style: groove;
+  top: 9.5%;
+  right: 8%;
   width: 40%;
   max-width: 40%;
 }
@@ -24,6 +30,7 @@
   list-style-type: none;
   margin: 0;
   padding: 0;
+  border-style: groove;
   overflow: auto;
   height: 500px;
 }
