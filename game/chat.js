@@ -12,7 +12,10 @@ module.exports = function(io, socket, games) {
         if (game.players.length == 2)
           socket.emit('message', {message: 'Room is already full'});
         else {
+          socket.emit('message', {message: 'AI has come forth'})
           var AIsocket = require('socket.io-client')('http://localhost:8080/');
+          game.ai = true;
+          game.aiObject = new Ai(game);
         }
       }
     }

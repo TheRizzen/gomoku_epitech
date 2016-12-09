@@ -45,7 +45,16 @@ module.exports = {
 		game.map[y * game.col_nb + x] = player.id;
 		io.to(game.room).emit('move', {x: x, y: y, player: player.id});
 		checkgame(game, player, x, y);
-		game.activePlayer = game.activePlayer ^ 1;
+                if (game.ai) {
+                  console.log('AI PLAYED');
+                  console.log(game);
+                  var coord = game.aiObject.findPlay(2, player.pawn, game.map);
+                  console.log('x: ', coord[0]);
+                  console.log('y: ', coord[1]);
+                  game.map[game.get1DP(coord[0], coord[1])] = 2;
+                }
+                else
+                  game.activePlayer = game.activePlayer ^ 1;
 	    }
 	});
     }

@@ -1,4 +1,4 @@
-function ai(socket, game) {
+function ai(game) {
     this.socket;
     this.moves = [
 	[1, 1],

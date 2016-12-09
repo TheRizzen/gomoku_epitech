@@ -8,6 +8,8 @@ function Game(roomName) {
     this.line_nb = 19;
     this.map = []; // 0 = empty | 1 = p1 | 2 = p2
     this.players = [];
+    this.ai = false;
+    this.aiObject;
 
     this.moves = [
 	[1, 1],

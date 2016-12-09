@@ -13,6 +13,7 @@ body {
 }
 
 #board {
+  border-style: groove; 
   margin: 5%;
   position: absolute;
   left 50%;
