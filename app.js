@@ -11,7 +11,7 @@ var Game = require('./game/game.js');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
-games = [];
+var games = [];
 games.push(new Game("room #0"));
 
 var handler = require('./game/handler.js')(io, games);

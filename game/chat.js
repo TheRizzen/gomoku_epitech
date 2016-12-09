@@ -1,8 +1,23 @@
-var misc = require('./misc.js')
+var misc = require('./misc.js');
+var Ai = require('../ai/ai.js');
 
 module.exports = function(io, socket, games) {
   socket.on('message', function (data) {
-    game = misc.find_player(games, socket.id).game;
-    io.to(game.room).emit('message', {id: data.user, message: data.message});
+    var game = misc.find_player(games, socket.id).game;
+
+    if (data.message.charAt(0) == '/') {
+      if (data.message == '/help')
+        socket.emit('message', {message: 'Help: /ai /bouh'});
+      if (data.message == '/ai') {
+        if (game.players.length == 2)
+          socket.emit('message', {message: 'Room is already full'});
+        else {
+          var AIsocket = require('socket.io-client')('http://localhost:8080/');
+        }
+      }
+    }
+    else {
+      io.to(game.room).emit('message', {id: data.user, message: data.message});
+    }
   });
 };

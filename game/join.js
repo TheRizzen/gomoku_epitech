@@ -1,5 +1,5 @@
-Game = require('./game.js');
-Player = require('./player.js');
+var Game = require('./game.js');
+var Player = require('./player.js');
 
 var join = function(io, socket, games){
 

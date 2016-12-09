@@ -1,4 +1,5 @@
-function testIA() {
+  function ai(socket, game) {
+    this.socket;
     this.moves = [
 	[1, 1],
         [0, 1],
@@ -346,4 +347,4 @@ function testIA() {
     }
 };
 
-exports = module.exports = testIA;
+exports = module.exports = ai;
