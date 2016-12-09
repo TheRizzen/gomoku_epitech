@@ -1,9 +1,9 @@
 var now = require("performance-now");
-var testIA = require('./unit_test.js');
+var ai = require('./ai.js');
 
-test = new testIA();
+test = new ai();
 var pawn_type = 2;
-var pawnTaken = 0;
+var pawnTaken = 8;
 var start = now();
 var result = test.findPlay(pawn_type, pawnTaken);
 var end = now();

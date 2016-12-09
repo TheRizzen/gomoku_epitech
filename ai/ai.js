@@ -1,4 +1,4 @@
-  function ai(socket, game) {
+function ai(socket, game) {
     this.socket;
     this.moves = [
 	[1, 1],
@@ -9,8 +9,8 @@
         [0, -1],
 	[-1, 0],
         [-1, 1],
-        ];
-
+    ];
+    
     this.pawnTaken = 0;
     
     this.map = [
@@ -34,22 +34,24 @@
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ];
-
-        this.value = {
-	    'eaten' : 42,
-	    '4pawns' : 150,
-	    '3pawns' : 100,
-	    'eatpawn' : 50,
-	    '2for2pawns' : 25,
-	    'middle_xy' : 10,
-	    'pawnCoef' : 20,
-     };
-
+    
+    this.value = {
+	'eaten' : 42,
+	'4Apawns' : 150,
+	'3Apawns' : 100,
+	'4Epawns' : 140,
+	'3Epawns' : 90,
+	'eatpawn' : 50,
+	'2for2pawns' : 25,
+	'middle_xy' : 10,
+	'pawnCoef' : 20,
+    };
+    
     this.valueMap = [];
     
     this.isTherePawnAround = function(x, y) {
 	var i = 0;
-
+	
 	while (i < 8)
 	{
 	    if ((x + this.moves[i][0] >= 0) && (y + this.moves[i][1] >= 0) && 
@@ -117,14 +119,15 @@
 	    console.log('vecteur = ' + inc_x + '/'+ inc_y);
 	    console.log("MAp : " + this.map[(x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)))][(y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)))])
 	    console.log("X : " + (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) + " Y : "  + (y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i))))*/
-	    if (this.map[(x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)))][(y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)))] != tileType)
+	    if ((x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) > 0 &&
+		this.map[(x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)))][(y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)))] != tileType)
 		return false;
 	    i += 1;
 	    cnt += 1;
 	}
 	return true;
     }
-	
+      
     this.checkVectorForFive = function(x, y, vec1, vec2, playNum, size) {
 	var vec1_max = size;
 	var vec2_max = 0;
@@ -176,16 +179,16 @@
 	}
 	return false;
     }
-
-    this.arePawnTaken = function(x, y, player, map) {
-	var i = 0;
-	
+      
+      this.arePawnTaken = function(x, y, player, map) {
+	  var i = 0;
+	  
 	while (i < 8)
         {
             if (map[this.getVectorVal(x, this.moves[i][0], 0)][this.getVectorVal(y, this.moves[i][1], 0)] != player && map[x + this.moves[i][0]][y + this.moves[i][1]] != 0)
                 if (map[this.getVectorVal(x, this.moves[i][0], 1)][this.getVectorVal(y, this.moves[i][1], 1)] != player &&
 		    map[this.getVectorVal(x, this.moves[i][0], 1)][this.getVectorVal(y, this.moves[i][1], 1)] != 0)
-                    if (map[this.getVectorVal(x, this.moves[i][0], 2)][this.getVectorVal(y, this.moves[i][1], 2)] == player)
+                    if (this.getVectorVal(x, this.moves[i][0], 2) > 0 && map[this.getVectorVal(x, this.moves[i][0], 2)][this.getVectorVal(y, this.moves[i][1], 2)] == player)
             {
 		return true;
             }
@@ -212,28 +215,42 @@
 	// je Peux manger deux pions
 	if (this.arePawnTaken(x, y, player, this.map) == true)
 	{
-	    value += (this.pawnTaken * this.value['pawnCoef'])
+	    if (this.pawnTaken == 0)
+		value += this.value['pawnCoef'];
+	    else
+		value += (this.pawnTaken * this.value['pawnCoef'])
 	}
 
 	if (x >= 7 && x <= 12)
 	    value += this.value['middle_xy'];
 	if (y >= 7 && y <= 12)
 	    value += this.value['middle_xy'];
-	//check si deja 4 en lignes pour apporter le point gagnant ?
+
 	if ((this.areThereFivePawn(x, y, 4, player)) == true)
 	{
-	    value += this.value['4pawns'];
+	    value += this.value['4Apawns'];
 	}
-	//check si deja 3 en ligne et aucun autre pion ennemie aux extremité une future defaite a l'ennemie	
+
 	if ((this.areThereFivePawn(x, y, 3, player)) == true)
 	{
-	    value += this.value['3pawns'];
+	    value += this.value['3Apawns'];
 	}
+	
+	if ((this.areThereFivePawn(x, y, 5, player2)) == true)
+	{
+	    value += this.value['4Epawns'];
+	}
+
+	if ((this.areThereFivePawn(x, y, 4, player2)) == true)
+	{
+	    value += this.value['3Epawns'];
+	}
+	
 	
 	return [x, y, value];
     }
     
-    this.getMax = function(x, y, pawn_type, depth) {
+    this.getMax = function(x, y, pawn_type, depth, tmp) {
 	if (depth == 0)
 	    return this.assignValue(x, y, pawn_type);
 
@@ -259,6 +276,8 @@
 			maxI = i;
 			maxj = j;
 			max = tmp[2];
+			if (max > tmp)
+			    return [maxI, maxJ, max];
 		    }
 		    this.map[i][j] = 0;
 		}
@@ -269,7 +288,7 @@
 	return [maxI, maxJ, max];
     }
 
-    this.getMin = function(x, y, pawn_type, depth) {
+    this.getMin = function(x, y, pawn_type, depth, tmp) {
 	if (depth == 0)
 	    return this.assignValue(x, y, pawn_type);
 
@@ -288,13 +307,15 @@
 		if (this.map[i][j] == 0 && this.isTherePawnAround(i, j) == 1)
 		{
 		    this.map[i][j] = pawn_type;
-		    tmp = this.getMax(x, y, (pawn_type == 1 ? 2 : 1), depth - 1);
+		    tmp = this.getMax(x, y, (pawn_type == 1 ? 2 : 1), depth - 1, min);
 
 		    if (tmp[2] < min && Math.floor((Math.random() * 10) + 1) % 2 == 1)
 		    {
 			maxI = i;
 			maxj = j;
 			min = tmp[2];
+			if (tmp[2] < tmp)
+			    return [maxI, maxJ, min];
 		    }
 		    this.map[i][j] = 0;
 		}
@@ -321,7 +342,7 @@
 		if (this.map[i][j] == 0 && this.isTherePawnAround(i, j) == 1)
 		{
 		    this.map[i][j] = 1;
-		    tmp = this.getMin(i, j, pawn_type, depth - 1);
+		    tmp = this.getMin(i, j, pawn_type, depth - 1, max);
 		    if (tmp[2] > max && Math.floor((Math.random() * 10) + 1) % 2 == 0)
 		    {
 			max = tmp[2];
@@ -337,11 +358,13 @@
 	return [maxX, maxY];
     }
 
-    this.findPlay = function(pawn_type, pawnTaken) {
+    this.findPlay = function(pawn_type, pawnTaken, map) {
 	if (this.emptyMap() == true)
 	    return ([18 / 2, 18 / 2]);
 
-	var depth = 2;
+	var depth = 4;
+	//TO decomment once map is parametered
+//	this.map = map;
 	this.pawnTaken = pawnTaken;
 	return this.minMaxLoop(depth, pawn_type);
     }
