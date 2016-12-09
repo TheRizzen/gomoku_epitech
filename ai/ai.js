@@ -362,7 +362,7 @@ function ai(game) {
 	if (this.emptyMap() == true)
 	    return ([18 / 2, 18 / 2]);
 
-	var depth = 4;
+	var depth = 2;
 
 	var y = 0;
 	var x;
@@ -379,7 +379,6 @@ function ai(game) {
 	    }
 	    y += 1;
 	}
-	this.map = map;
 	this.pawnTaken = pawnTaken;
 	return this.minMaxLoop(depth, pawn_type);
     }
