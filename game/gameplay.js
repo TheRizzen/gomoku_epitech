@@ -21,7 +21,6 @@ module.exports = {
 		console.log("Partie gagné : 10 pions pris !");
 		io.to(game.room).emit('win', {player: player.id, reason: "pawn taken"});
 	    }
-	    
 	    if (game.areThereFivePawn(game.get1DP(x, y)) == true) {
 		console.log('Partie gagné !');
 		io.to(game.room).emit('win', {player: player.id, reason: "pawn alignment"});
@@ -52,6 +51,7 @@ module.exports = {
                   console.log('y: ', coord[0]);
                   game.map[game.get1DP(coord[1], coord[0])] = 2;
                   io.to(game.room).emit('move', {x: coord[1], y: coord[0], player: 2});
+                  checkgame(game, game.players[1], coord[1], coord[0]);
                   game.activePlayer = game.activePlayer ^ 1;
                 }
                 else
