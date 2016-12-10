@@ -51,6 +51,11 @@ socket.on('eatpawn', function(data) {
   chatlog.appendChild(elem);
 });
 
+socket.on('clear', function() {
+  board.removeAllObjects();
+  onGoing = 1;
+})
+
 var tool = document.getElementById("tool"); // get the <select> element
 
 board.addEventListener("click", function(x, y) {

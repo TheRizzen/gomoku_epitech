@@ -18,6 +18,18 @@ module.exports = function(io, socket, games) {
           game.aiObject = new Ai(game);
         }
       }
+      if (data.message == '/replay') {
+        if (game.players.length == 2) {
+          console.log(game);
+          game.clearBoard();
+          socket.emit('clear');
+          game.players[0].pawn = 0;
+          game.players[1].pawn = 0;
+          game.activePlayer = 0;
+        }
+        else
+          socket.emit('message', {message: 'Cannot replay the game'});
+      }
     }
     else {
       io.to(game.room).emit('message', {id: data.user, message: data.message});
