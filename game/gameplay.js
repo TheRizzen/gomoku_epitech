@@ -48,10 +48,10 @@ module.exports = {
                 if (game.ai) {
                   game.activePlayer = game.activePlayer ^ 1;
                   var coord = game.aiObject.findPlay(2, player.pawn, game.map);
-                  console.log('x: ', coord[0]);
-                  console.log('y: ', coord[1]);
-                  game.map[game.get1DP(coord[0], coord[1])] = 2;
-                  io.to(game.room).emit('move', {x: coord[0], y: coord[1], player: 2});
+                  console.log('x: ', coord[1]);
+                  console.log('y: ', coord[0]);
+                  game.map[game.get1DP(coord[1], coord[0])] = 2;
+                  io.to(game.room).emit('move', {x: coord[1], y: coord[0], player: 2});
                   game.activePlayer = game.activePlayer ^ 1;
                 }
                 else

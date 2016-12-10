@@ -36,13 +36,12 @@ function ai(game) {
     ];// 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18
     
     this.value = {
-	'eaten' : 42,
-	'4Apawns' : 150,
-	'3Apawns' : 100,
-	'4Epawns' : 140,
-	'3Epawns' : 90,
-	'eatpawn' : 50,
-	'2for2pawns' : 25,
+	'eaten' : 90,
+	'4Apawns' : 130,
+	'3Apawns' : 80,
+	'4Epawns' : 150,
+	'3Epawns' : 140,
+	'eatpawn' : 100,
 	'middle_xy' : 10,
 	'pawnCoef' : 20,
     };
@@ -236,12 +235,12 @@ function ai(game) {
 	    value += this.value['3Apawns'];
 	}
 	
-	if ((this.areThereFivePawn(x, y, 5, player2)) == true)
+	if ((this.areThereFivePawn(x, y, 4, player2)) == true)
 	{
 	    value += this.value['4Epawns'];
 	}
 
-	if ((this.areThereFivePawn(x, y, 4, player2)) == true)
+	if ((this.areThereFivePawn(x, y, 3, player2)) == true)
 	{
 	    value += this.value['3Epawns'];
 	}
@@ -362,7 +361,7 @@ function ai(game) {
 	if (this.emptyMap() == true)
 	    return ([18 / 2, 18 / 2]);
 
-	var depth = 2;
+	var depth = 3;
 
 	var y = 0;
 	var x;
