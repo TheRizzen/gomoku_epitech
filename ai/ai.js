@@ -41,7 +41,7 @@ function ai(game) {
 	'3Apawns' : 80,
 	'4Epawns' : 150,
 	'3Epawns' : 140,
-	'eatpawn' : 100,
+	'eatpawn' : 70,
 	'middle_xy' : 10,
 	'pawnCoef' : 20,
     };
@@ -171,8 +171,8 @@ function ai(game) {
 	while (i < 8)
 	{
 	    if (map[this.getVectorVal(x, this.moves[i][0], 0)][this.getVectorVal(y, this.moves[i][1], 0)] == player)
-		if (map[this.getVectorVal(x, this.moves[i][0], 1)][this.getVectorVal(y, this.moves[i][1], 1)] == player2)
-		    if (map[this.getVectorVal(x, this.moves[(i > 3 ? i - 4 : i + 4)][0], 1)][this.getVectorVal(y, this.moves[(i > 3 ? i - 4 : i + 4)][1], 1)] == 0)
+		if (this.getVectorVal(x, this.moves[i][0], 1) > 0 && map[this.getVectorVal(x, this.moves[i][0], 1)][this.getVectorVal(y, this.moves[i][1], 1)] == player2)
+		    if (this.getVectorVal(x, this.moves[(i > 3 ? i - 4 : i + 4)][0], 1) > 0 && map[this.getVectorVal(x, this.moves[(i > 3 ? i - 4 : i + 4)][0], 1)][this.getVectorVal(y, this.moves[(i > 3 ? i - 4 : i + 4)][1], 1)] == 0)
 			return true;
 	    i += 1;
 	}
@@ -185,7 +185,7 @@ function ai(game) {
 	while (i < 8)
         {
             if (map[this.getVectorVal(x, this.moves[i][0], 0)][this.getVectorVal(y, this.moves[i][1], 0)] != player && map[x + this.moves[i][0]][y + this.moves[i][1]] != 0)
-                if (map[this.getVectorVal(x, this.moves[i][0], 1)][this.getVectorVal(y, this.moves[i][1], 1)] != player &&
+                if (this.getVectorVal(x, this.moves[i][0], 1) > 0 && map[this.getVectorVal(x, this.moves[i][0], 1)][this.getVectorVal(y, this.moves[i][1], 1)] != player &&
 		    map[this.getVectorVal(x, this.moves[i][0], 1)][this.getVectorVal(y, this.moves[i][1], 1)] != 0)
                     if (this.getVectorVal(x, this.moves[i][0], 2) > 0 && map[this.getVectorVal(x, this.moves[i][0], 2)][this.getVectorVal(y, this.moves[i][1], 2)] == player)
             {
