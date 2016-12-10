@@ -303,7 +303,7 @@ function Game(roomName) {
     };
 
     this.tenPawnTaken =  function () {
-	if (this.players[this.activePlayer].pawn == 10) {
+	if (this.players[this.activePlayer].pawn >= 10) {
 	    console.log("10 Pawn were took. Player : " + this.activePlayer + 1 + " won !");
 	    return true;
 	}

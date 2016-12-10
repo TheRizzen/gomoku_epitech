@@ -20,7 +20,6 @@ module.exports = function(io, socket, games) {
       }
       if (data.message == '/replay') {
         if (game.players.length == 2) {
-          console.log(game);
           game.clearBoard();
           socket.emit('clear');
           game.players[0].pawn = 0;
