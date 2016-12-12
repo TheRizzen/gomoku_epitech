@@ -118,9 +118,9 @@ function ai(game) {
 	    console.log('vecteur = ' + inc_x + '/'+ inc_y);
 	    console.log("MAp : " + this.map[(x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)))][(y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)))])
 	    console.log("X : " + (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) + " Y : "  + (y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i))))*/
-	    if ((x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) < 0 || (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) > 19)
+	    if ((x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) < 0 || (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) > 18)
 		return false;
-	    if ((x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) > 0 && (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) < 19 &&
+	    if ((x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) >= 0 && (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) < 19 &&
 		this.map[(x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)))][(y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)))] != tileType)
 		return false;
 	    i += 1;
@@ -172,11 +172,11 @@ function ai(game) {
 
 	while (i < 8)
 	{
-	    if (this.getVectorVal(x, this.moves[i][0], 0) > 0 && this.getVectorVal(x, this.moves[i][0], 0) < 19 &&
+	    if (this.getVectorVal(x, this.moves[i][0], 0) >= 0 && this.getVectorVal(x, this.moves[i][0], 0) < 19 &&
 		map[this.getVectorVal(x, this.moves[i][0], 0)][this.getVectorVal(y, this.moves[i][1], 0)] == player)
-		if (this.getVectorVal(x, this.moves[i][0], 1) > 0 && this.getVectorVal(x, this.moves[i][0], 1) < 19
+		if (this.getVectorVal(x, this.moves[i][0], 1) >= 0 && this.getVectorVal(x, this.moves[i][0], 1) < 19
 		    && map[this.getVectorVal(x, this.moves[i][0], 1)][this.getVectorVal(y, this.moves[i][1], 1)] == player2)
-		    if (this.getVectorVal(x, this.moves[(i > 3 ? i - 4 : i + 4)][0], 1) > 0 && this.getVectorVal(x, this.moves[(i > 3 ? i - 4 : i + 4)][0], 1) < 19
+		    if (this.getVectorVal(x, this.moves[(i > 3 ? i - 4 : i + 4)][0], 1) >= 0 && this.getVectorVal(x, this.moves[(i > 3 ? i - 4 : i + 4)][0], 1) < 19
 			&& map[this.getVectorVal(x, this.moves[(i > 3 ? i - 4 : i + 4)][0], 1)][this.getVectorVal(y, this.moves[(i > 3 ? i - 4 : i + 4)][1], 1)] == 0)
 			return true;
 	    i += 1;
@@ -189,8 +189,8 @@ function ai(game) {
 
 	while (i < 8)
         {
-	    if (this.getVectorVal(x, this.moves[i][0], 0) > 0 && this.getVectorVal(x, this.moves[i][0], 0) < 19 && this.getVectorVal(x, this.moves[i][0], 1) > 0 &&
-		this.getVectorVal(x, this.moves[i][0], 1) < 19 && this.getVectorVal(x, this.moves[i][0], 2) > 0 && this.getVectorVal(x, this.moves[i][0], 2) < 19)
+	    if (this.getVectorVal(x, this.moves[i][0], 0) >= 0 && this.getVectorVal(x, this.moves[i][0], 0) < 19 && this.getVectorVal(x, this.moves[i][0], 1) >= 0 &&
+		this.getVectorVal(x, this.moves[i][0], 1) < 19 && this.getVectorVal(x, this.moves[i][0], 2) >= 0 && this.getVectorVal(x, this.moves[i][0], 2) < 19)
 		if (map[this.getVectorVal(x, this.moves[i][0], 0)][this.getVectorVal(y, this.moves[i][1], 0)] == player2)
 		    if (map[this.getVectorVal(x, this.moves[i][0], 1)][this.getVectorVal(y, this.moves[i][1], 1)] == player2)
 			if (this.map[this.getVectorVal(x, this.moves[i][0], 2)][this.getVectorVal(y, this.moves[i][1], 2)] == player)
