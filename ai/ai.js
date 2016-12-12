@@ -39,6 +39,7 @@ function ai(game) {
 	'eaten' : 60,
 	'4Apawns' : 130,
 	'3Apawns' : 80,
+	'2Apawns' : 42,
 	'4Epawns' : 200,
 	'3Epawns' : 170,
 	'middle_xy' : 10,
@@ -210,6 +211,7 @@ function ai(game) {
 	// Je peux me faire manger
 	if (this.vulnerablePawn(y, x, player, player2, this.map) == true)
 	{
+	    console.log("Je me fais manger");
 	    if (game.players[0].pawn != 0)
 		value -= (this.value['eaten'] * game.players[0].pawn);
 	    else
@@ -219,7 +221,7 @@ function ai(game) {
 	// je Peux manger deux pions
 	if (this.arePawnTaken(x, y, player, player2, this.map) == true)
 	{
-	    console.log("Je peux manger");
+	    console.log("Je mange");
 	    if (this.pawnTaken == 0)
 		value += this.value['pawnCoef'];
 	    else
@@ -242,6 +244,12 @@ function ai(game) {
 	{
 	    console.log("3 pions alliés");
 	    value += this.value['3Apawns'];
+	}
+	
+	if ((this.areThereFivePawn(x, y, 2, player)) == true)
+	{
+	    console.log("2 pions alliés");
+	    value += this.value['2Apawns'];
 	}
 	
 	if ((this.areThereFivePawn(x, y, 4, player2)) == true)
@@ -370,11 +378,11 @@ function ai(game) {
 	    {
 		if (this.map[i][j] == 0 && this.isTherePawnAround(i, j) == 1)
 		{
-//		    this.map[i][j] = 2;
-		    /*tmp = this.getMin(i, j, 1, depth - 1, max);
+		    this.map[i][j] = 2;
+		    tmp = this.getMax(i, j, 1, depth - 1, max);
 		    console.log("For " + i + "/" + j);
-		    console.log("getMax result = " + tmp);*/
-		    tmp = this.assignValue(i, j, 2)
+		    console.log("getMax result = " + tmp);
+//		    tmp = this.assignValue(i, j, 2)
 		    if (tmp[2] > max || (tmp[2] == max && Math.floor((Math.random() * 10) + 1) % 2 == 0))
 		    {
 			console.log(j + "/" + i + " | Nouveau max : " + max);
@@ -395,7 +403,7 @@ function ai(game) {
 	if (this.emptyMap() == true)
 	    return ([18 / 2, 18 / 2]);
 
-	var depth = 2;
+	var depth = 1;
 
 	var y = 0;
 	var x;
