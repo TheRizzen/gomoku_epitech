@@ -118,6 +118,8 @@ function ai(game) {
 	    console.log('vecteur = ' + inc_x + '/'+ inc_y);
 	    console.log("MAp : " + this.map[(x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)))][(y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)))])
 	    console.log("X : " + (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) + " Y : "  + (y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i))))*/
+	    if ((x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) < 0 || (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) > 19)
+		return false;
 	    if ((x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) > 0 && (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) < 19 &&
 		this.map[(x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)))][(y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)))] != tileType)
 		return false;
@@ -219,11 +221,11 @@ function ai(game) {
 	}
 	
 	// je Peux manger deux pions
-	if (this.arePawnTaken(x, y, player, player2, this.map) == true)
+	if (this.arePawnTaken(y, x, player, player2, this.map) == true)
 	{
 	    console.log("Je mange");
 	    if (this.pawnTaken == 0)
-		value += this.value['pawnCoef'];
+		value += this.value['pawnCoef'] + 30;
 	    else
 		value += (this.pawnTaken * this.value['pawnCoef'])
 	}
@@ -280,7 +282,6 @@ function ai(game) {
 	var j;
 	var tmp;
 
-	console.log("Je rentre dans getMax pour : " + pawn_type);
 	while (i < 19)
 	{
 	    j = 0;
@@ -289,7 +290,7 @@ function ai(game) {
 		if (this.map[i][j] == 0 && this.isTherePawnAround(i, j) == 1)
 		{
 		    this.map[i][j] = pawn_type;
-		    tmp = this.getMin(x, y, 1, depth - 1);
+		    tmp = this.getMin(i, j, 1, depth - 1);
 		    
 		    if (tmp[2] > max || (tmp[2] == max && Math.floor((Math.random() * 10) + 1) % 2 == 0))
 		    {
@@ -320,7 +321,6 @@ function ai(game) {
 	var j;
 	var tmp;
 
-	console.log("Je rentre dans getMin pour : " + pawn_type);
 	while (i < 19)
 	{
 	    j = 0;
@@ -329,7 +329,7 @@ function ai(game) {
 		if (this.map[i][j] == 0 && this.isTherePawnAround(i, j) == 1)
 		{
 		    this.map[i][j] = pawn_type;
-		    tmp = this.getMax(x, y, 2, depth - 1, min);
+		    tmp = this.getMax(i, j, 2, depth - 1, min);
 
 		    if (tmp[2] < min || (tmp[2] == min && Math.floor((Math.random() * 10) + 1) % 2 == 1))
 		    {
@@ -357,20 +357,6 @@ function ai(game) {
 	var i = 0;
 	var j;
 
-	console.log("   0 1 2 3 4 5 6 7 8 9 10 11 12 13")
-	console.log("0  " + this.map[0]);
-	console.log("1  " + this.map[1]);
-	console.log("2  " + this.map[2]);
-	console.log("3  " + this.map[3]);
-	console.log("4  " + this.map[4]);
-	console.log("5  " + this.map[5]);
-	console.log("6  " + this.map[6]);
-	console.log("7  " + this.map[7]);
-	console.log("8  " + this.map[8]);
-	console.log("9  " + this.map[9]);
-	console.log("10 " + this.map[10]);
-	console.log("11 " + this.map[11]);
-	console.log("12 " + this.map[12]);
 	while (i < 19)
 	{
 	    j = 0;
@@ -380,8 +366,6 @@ function ai(game) {
 		{
 		    this.map[i][j] = 2;
 		    tmp = this.getMax(i, j, 1, depth - 1, max);
-		    console.log("For " + i + "/" + j);
-		    console.log("getMax result = " + tmp);
 //		    tmp = this.assignValue(i, j, 2)
 		    if (tmp[2] > max || (tmp[2] == max && Math.floor((Math.random() * 10) + 1) % 2 == 0))
 		    {
