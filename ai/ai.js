@@ -97,27 +97,20 @@ function ai(game) {
     }
     
     this.getIndexWithVector = function(pawn_idx, vec, inc) {
-        return (pawn_idx + (vec[0] == 0 ? vec[0] : (vec[0] > 0 ? vec[0] + inc : vec[0] - inc)) + ((vec[1] == 0 ? vec[1] : (vec[1] > 0 ? vec[1] + inc : vec[1] - inc)) * this.col_nb));
+        return (pawn_idx + (vec == 0 ? vec : (vec > 0 ? vec + inc : vec - inc)));
     }
     
-    this.getNumOfIden = function(vec, pawn_idx, pawn_type) {
-	var i = 0;
-
-	while (this.map[this.getIndexWithVector(pawn_idx, vec, i)] == pawn_type)
-	    i += 1;
-	return i;
-    }
-
     this.checkLineForPawn = function(x, y, inc_x, inc_y, max, tileType) {
 	var i = 0;
 	var cnt = 0;
+	var x_res;
 
 	while (cnt < max)
 	{
-	    if ((x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) < 0 || (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) > 18)
+	    x_res = (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)));
+	    if (x_res < 0 || x_res > 18)
 		return false;
-	    if ((x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) >= 0 && (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) < 19 &&
-		this.map[(x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)))][(y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)))] != tileType)
+	    if (this.map[x_res][(y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)))] != tileType)
 		return false;
 	    i += 1;
 	    cnt += 1;
@@ -125,6 +118,15 @@ function ai(game) {
 	return true;
     }
       
+    this.checkIfEmptyAfter = function(x, y, vec, max) {
+	var tmp = this.getIndexWithVector(x, vec[0], max);
+
+	if (tmp >= 0 && tmp < 19)
+	    if (this.map[tmp][this.getIndexWithVector(y, vec[1], max)] == 0)
+	    return true;
+	return false;
+    }
+
     this.checkVectorForFive = function(x, y, vec1, vec2, playNum, size) {
 	var vec1_max = size;
 	var vec2_max = 0;
@@ -132,10 +134,10 @@ function ai(game) {
 	while (vec2_max <= size)
 	{
 	    if (this.checkLineForPawn(x, y, this.moves[vec1][0], this.moves[vec1][1], vec1_max, playNum) == true)
-	    {
-		if (this.checkLineForPawn(x, y, this.moves[vec2][0], this.moves[vec2][1], vec2_max, playNum) == true)
-		    return true;
-	    }
+		if (this.checkIfEmptyAfter(x, y, this.moves[vec1], vec1_max + 1) == true ||
+		    this.checkIfEmptyAfter(x, y, this.moves[vec2], vec2_max + 1) == true)
+		    if (this.checkLineForPawn(x, y, this.moves[vec2][0], this.moves[vec2][1], vec2_max, playNum) == true)
+			return true;
 	    vec1_max -= 1;
 	    vec2_max += 1;
 	}
@@ -165,15 +167,16 @@ function ai(game) {
 
     this.vulnerablePawn = function(x, y, player, player2, map) {
 	var i = 0;
+	var x_res;
 
 	while (i < 8)
 	{
-	    if (this.getVectorVal(x, this.moves[i][0], 0) >= 0 && this.getVectorVal(x, this.moves[i][0], 0) < 19 &&
-		map[this.getVectorVal(x, this.moves[i][0], 0)][this.getVectorVal(y, this.moves[i][1], 0)] == player)
-		if (this.getVectorVal(x, this.moves[i][0], 1) >= 0 && this.getVectorVal(x, this.moves[i][0], 1) < 19
-		    && map[this.getVectorVal(x, this.moves[i][0], 1)][this.getVectorVal(y, this.moves[i][1], 1)] == player2)
-		    if (this.getVectorVal(x, this.moves[(i > 3 ? i - 4 : i + 4)][0], 1) >= 0 && this.getVectorVal(x, this.moves[(i > 3 ? i - 4 : i + 4)][0], 1) < 19
-			&& map[this.getVectorVal(x, this.moves[(i > 3 ? i - 4 : i + 4)][0], 1)][this.getVectorVal(y, this.moves[(i > 3 ? i - 4 : i + 4)][1], 1)] == 0)
+	    x_res1 = this.getVectorVal(x, this.moves[i][0], 0);
+	    x_res2 = this.getVectorVal(x, this.moves[i][0], 1);
+	    x_res3 = this.getVectorVal(x, this.moves[(i > 3 ? i - 4 : i + 4)][0], 1);
+	    if (x_res1 >= 0 && x_res1 < 19 && map[x_res1][this.getVectorVal(y, this.moves[i][1], 0)] == player)
+		if (x_res2 >= 0 && x_res2 < 19 && map[x_res2][this.getVectorVal(y, this.moves[i][1], 1)] == player2)
+		    if (x_res3 >= 0 && x_res3 < 19 && map[x_res3][this.getVectorVal(y, this.moves[(i > 3 ? i - 4 : i + 4)][1], 1)] == 0)
 			return true;
 	    i += 1;
 	}
@@ -182,14 +185,19 @@ function ai(game) {
     
     this.arePawnTaken = function(x, y, player, player2, map) {
 	var i = 0;
+	var x_res1;
+	var x_res2;
+	var x_res3;
 
 	while (i < 8)
         {
-	    if (this.getVectorVal(x, this.moves[i][0], 0) >= 0 && this.getVectorVal(x, this.moves[i][0], 0) < 19 && this.getVectorVal(x, this.moves[i][0], 1) >= 0 &&
-		this.getVectorVal(x, this.moves[i][0], 1) < 19 && this.getVectorVal(x, this.moves[i][0], 2) >= 0 && this.getVectorVal(x, this.moves[i][0], 2) < 19)
-		if (map[this.getVectorVal(x, this.moves[i][0], 0)][this.getVectorVal(y, this.moves[i][1], 0)] == player2)
-		    if (map[this.getVectorVal(x, this.moves[i][0], 1)][this.getVectorVal(y, this.moves[i][1], 1)] == player2)
-			if (this.map[this.getVectorVal(x, this.moves[i][0], 2)][this.getVectorVal(y, this.moves[i][1], 2)] == player)
+	    x_res1 = this.getVectorVal(x, this.moves[i][0], 0);
+	    x_res2 = this.getVectorVal(x, this.moves[i][0], 1);
+	    x_res3 = this.getVectorVal(x, this.moves[i][0], 2);
+	    if (x_res1 >= 0 && x_res1 < 19 && x_res2 >= 0 && x_res2 < 19 && x_res3 >= 0 && x_res3 < 19)
+		if (map[x_res1][this.getVectorVal(y, this.moves[i][1], 0)] == player2)
+		    if (map[x_res2][this.getVectorVal(y, this.moves[i][1], 1)] == player2)
+			if (this.map[x_res3][this.getVectorVal(y, this.moves[i][1], 2)] == player)
 			    return true;
             i += 1;
         }
@@ -384,7 +392,7 @@ function ai(game) {
 	if (this.emptyMap() == true)
 	    return ([18 / 2, 18 / 2]);
 
-	var depth = 3;
+	var depth = 4;
 
 	var y = 0;
 	var x;
