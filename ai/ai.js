@@ -114,10 +114,6 @@ function ai(game) {
 
 	while (cnt < max)
 	{
-/*	    console.log('[' + x + ']' + '[' + y + ']');
-	    console.log('vecteur = ' + inc_x + '/'+ inc_y);
-	    console.log("MAp : " + this.map[(x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i)))][(y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i)))])
-	    console.log("X : " + (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) + " Y : "  + (y + (inc_y == 0 ? inc_y : (inc_y > 0 ? inc_y + i : inc_y - i))))*/
 	    if ((x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) < 0 || (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) > 18)
 		return false;
 	    if ((x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) >= 0 && (x + (inc_x == 0 ? inc_x : (inc_x > 0 ? inc_x + i : inc_x - i))) < 19 &&
@@ -207,13 +203,13 @@ function ai(game) {
 	var dupMap = this.map.slice(0);
 
 //	console.log('[' + x + ']' + '[' + y + ']');
-	player == 1 ? player2 = 2 : player2 = 1;
+	player2 = (player % 2) + 1;
 	
-	console.log("player : " + player + " | x/y : " + x + "/" + y);
+//	console.log("player : " + player + " | x/y : " + x + "/" + y);
 	// Je peux me faire manger
 	if (this.vulnerablePawn(y, x, player, player2, this.map) == true)
 	{
-	    console.log("Je me fais manger");
+//	    console.log("Je me fais manger");
 	    if (game.players[0].pawn != 0)
 		value -= (this.value['eaten'] * game.players[0].pawn);
 	    else
@@ -223,7 +219,7 @@ function ai(game) {
 	// je Peux manger deux pions
 	if (this.arePawnTaken(y, x, player, player2, this.map) == true)
 	{
-	    console.log("Je mange");
+//	    console.log("Je mange");
 	    if (this.pawnTaken == 0)
 		value += this.value['pawnCoef'] + 30;
 	    else
@@ -237,37 +233,37 @@ function ai(game) {
 
 	if ((this.areThereFivePawn(x, y, 4, player)) == true)
 	{
-	    console.log("4 pions alliés");
+//	    console.log("4 pions alliés");
 
 	    value += this.value['4Apawns'];
 	}
 
 	if ((this.areThereFivePawn(x, y, 3, player)) == true)
 	{
-	    console.log("3 pions alliés");
+//	    console.log("3 pions alliés");
 	    value += this.value['3Apawns'];
 	}
 	
 	if ((this.areThereFivePawn(x, y, 2, player)) == true)
 	{
-	    console.log("2 pions alliés");
+//	    console.log("2 pions alliés");
 	    value += this.value['2Apawns'];
 	}
 	
 	if ((this.areThereFivePawn(x, y, 4, player2)) == true)
 	{
-	    console.log("4 pions ennemies");
+//	    console.log("4 pions ennemies");
 	    value += this.value['4Epawns'];
 	}
 
 	if ((this.areThereFivePawn(x, y, 3, player2)) == true)
 	{
-	    console.log("3 pions ennemies");
+//	    console.log("3 pions ennemies");
 	    value += this.value['3Epawns'];
 	}
 	
 	
-	console.log("Value : " + value);
+//	console.log("Value : " + value);
 	return [x, y, value];
     }
     
@@ -290,16 +286,17 @@ function ai(game) {
 		if (this.map[i][j] == 0 && this.isTherePawnAround(i, j) == 1)
 		{
 		    this.map[i][j] = pawn_type;
-		    tmp = this.getMin(i, j, 1, depth - 1);
-		    
+		    tmp = this.getMin(x, y, 1, depth - 1);
 		    if (tmp[2] > max || (tmp[2] == max && Math.floor((Math.random() * 10) + 1) % 2 == 0))
 		    {
 			maxI = i;
 			maxj = j;
 			max = tmp[2];
-			console.log("Nouveau max : " + max);
 			if (max > tmp)
+			{
+			    this.map[i][j] = 0;
 			    return [maxI, maxJ, max];
+			}
 		    }
 		    this.map[i][j] = 0;
 		}
@@ -329,16 +326,17 @@ function ai(game) {
 		if (this.map[i][j] == 0 && this.isTherePawnAround(i, j) == 1)
 		{
 		    this.map[i][j] = pawn_type;
-		    tmp = this.getMax(i, j, 2, depth - 1, min);
-
+		    tmp = this.getMax(x, y, 2, depth - 1, min);
 		    if (tmp[2] < min || (tmp[2] == min && Math.floor((Math.random() * 10) + 1) % 2 == 1))
 		    {
 			maxI = i;
 			maxj = j;
 			min = tmp[2];
-			console.log("Nouveau min : " + min);
 			if (tmp[2] < tmp)
+			{
+			    this.map[i][j] = 0;
 			    return [maxI, maxJ, min];
+			}
 		    }
 		    this.map[i][j] = 0;
 		}
@@ -365,11 +363,10 @@ function ai(game) {
 		if (this.map[i][j] == 0 && this.isTherePawnAround(i, j) == 1)
 		{
 		    this.map[i][j] = 2;
-		    tmp = this.getMax(i, j, 1, depth - 1, max);
+		    tmp = this.getMin(i, j, 1, depth - 1, max);
 //		    tmp = this.assignValue(i, j, 2)
 		    if (tmp[2] > max || (tmp[2] == max && Math.floor((Math.random() * 10) + 1) % 2 == 0))
 		    {
-			console.log(j + "/" + i + " | Nouveau max : " + max);
 			max = tmp[2];
 			maxX = i;
 			maxY = j;
@@ -387,7 +384,7 @@ function ai(game) {
 	if (this.emptyMap() == true)
 	    return ([18 / 2, 18 / 2]);
 
-	var depth = 1;
+	var depth = 3;
 
 	var y = 0;
 	var x;
