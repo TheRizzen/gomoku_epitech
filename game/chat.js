@@ -15,7 +15,6 @@ module.exports = function(io, socket, games) {
           socket.emit('message', {message: 'AI has come forth'})
           var AIsocket = require('socket.io-client')('http://localhost:8080/');
           game.ai = true;
-          game.aiObject = new Ai(game);
         }
       }
       if (data.message == '/replay') {
@@ -28,6 +27,11 @@ module.exports = function(io, socket, games) {
         }
         else
           socket.emit('message', {message: 'Cannot replay the game'});
+      }
+      if (data.message == '/advice') {
+        var player = game.players[0];
+        var coord = game.aiObject.findPlay(1, player.pawn, game.map);
+        socket.emit('message', {message: 'Our AI advices you to play x: ' + coord[0] + ' y: ' + coord[1]});
       }
     }
     else {
