@@ -37,13 +37,13 @@ function ai(game) {
     
     this.value = {
 	'eaten' : 60,
-	'4Apawns' : 130,
-	'3Apawns' : 80,
+	'4Apawns' : 700,
+	'3Apawns' : 120,
 	'2Apawns' : 42,
-	'4Epawns' : 200,
-	'3Epawns' : 170,
+	'4Epawns' : 600,
+	'3Epawns' : 300,
 	'middle_xy' : 10,
-	'pawnCoef' : 70,
+	'pawnCoef' : 100,
     };
     
     this.valueMap = [];
@@ -207,71 +207,37 @@ function ai(game) {
     this.assignValue = function(x, y, player) {
 	var value = 0;
 	var player2 = 0;
-	// DUPLICATE MAP TO CHANGE FREELY
-	var dupMap = this.map.slice(0);
 
-//	console.log('[' + x + ']' + '[' + y + ']');
 	player2 = (player % 2) + 1;
 	
-//	console.log("player : " + player + " | x/y : " + x + "/" + y);
-	// Je peux me faire manger
 	if (this.vulnerablePawn(y, x, player, player2, this.map) == true)
 	{
-//	    console.log("Je me fais manger");
 	    if (game.players[0].pawn != 0)
 		value -= (this.value['eaten'] * game.players[0].pawn);
 	    else
 		value -= this.value['eaten'];
 	}
 	
-	// je Peux manger deux pions
 	if (this.arePawnTaken(y, x, player, player2, this.map) == true)
 	{
-//	    console.log("Je mange");
 	    if (this.pawnTaken == 0)
 		value += this.value['pawnCoef'] + 30;
 	    else
 		value += (this.pawnTaken * this.value['pawnCoef'])
 	}
 
-/*	if (x >= 7 && x <= 12)
-	    value += this.value['middle_xy'];
-	if (y >= 7 && y <= 12)
-	    value += this.value['middle_xy'];*/
-
 	if ((this.areThereFivePawn(x, y, 4, player)) == true)
-	{
-//	    console.log("4 pions alliés");
-
 	    value += this.value['4Apawns'];
-	}
-
-	if ((this.areThereFivePawn(x, y, 3, player)) == true)
-	{
-//	    console.log("3 pions alliés");
+	else if ((this.areThereFivePawn(x, y, 3, player)) == true)
 	    value += this.value['3Apawns'];
-	}
-	
-	if ((this.areThereFivePawn(x, y, 2, player)) == true)
-	{
-//	    console.log("2 pions alliés");
+	else if ((this.areThereFivePawn(x, y, 2, player)) == true)
 	    value += this.value['2Apawns'];
-	}
 	
 	if ((this.areThereFivePawn(x, y, 4, player2)) == true)
-	{
-//	    console.log("4 pions ennemies");
 	    value += this.value['4Epawns'];
-	}
-
-	if ((this.areThereFivePawn(x, y, 3, player2)) == true)
-	{
-//	    console.log("3 pions ennemies");
+	else if ((this.areThereFivePawn(x, y, 3, player2)) == true)
 	    value += this.value['3Epawns'];
-	}
 	
-	
-//	console.log("Value : " + value);
 	return [x, y, value];
     }
     
@@ -282,14 +248,14 @@ function ai(game) {
 	var max = -10000;
 	var maxI = 0;
 	var maxJ = 0;
-	var i = 0;
+	var i = 18;
 	var j;
 	var tmp;
 
-	while (i < 19)
+	while (i >= 0)
 	{
-	    j = 0;
-	    while (j < 19)
+	    j = 18;
+	    while (j >= 0)
 	    {
 		if (this.map[i][j] == 0 && this.isTherePawnAround(i, j) == 1)
 		{
@@ -308,9 +274,9 @@ function ai(game) {
 		    }
 		    this.map[i][j] = 0;
 		}
-		j += 1;
+		j--;
 	    }
-	    i += 1;
+	    i--;
 	}
 	return [maxI, maxJ, max];
     }
@@ -322,14 +288,14 @@ function ai(game) {
 	var min = 100000;
 	var maxI = 0;
 	var maxJ = 0;
-	var i = 0;
+	var i = 18;
 	var j;
 	var tmp;
 
-	while (i < 19)
+	while (i >= 0)
 	{
-	    j = 0;
-	    while (j < 19)
+	    j = 18;
+	    while (j >= 0)
 	    {
 		if (this.map[i][j] == 0 && this.isTherePawnAround(i, j) == 1)
 		{
@@ -348,9 +314,9 @@ function ai(game) {
 		    }
 		    this.map[i][j] = 0;
 		}
-		j += 1;
+		j--;
 	    }
-	    i += 1;
+	    i--;
 	}
 	return [maxI, maxJ, min];
     }
@@ -360,13 +326,13 @@ function ai(game) {
 	var tmp;
 	var maxX = -1;
 	var maxY = -1;
-	var i = 0;
+	var i = 18;
 	var j;
 
-	while (i < 19)
+	while (i >= 0)
 	{
-	    j = 0;
-	    while (j < 19)
+	    j = 18;
+	    while (j >= 0)
 	    {
 		if (this.map[i][j] == 0 && this.isTherePawnAround(i, j) == 1)
 		{
@@ -381,9 +347,9 @@ function ai(game) {
 		    }
 		    this.map[i][j] = 0;
 		}
-		j += 1;
+		j--;
 	    }
-	    i += 1;
+	    i--;
 	}
 	return [maxX, maxY];
     }
@@ -392,7 +358,7 @@ function ai(game) {
 	if (this.emptyMap() == true)
 	    return ([18 / 2, 18 / 2]);
 
-	var depth = 4;
+	var depth = 3;
 
 	var y = 0;
 	var x;
