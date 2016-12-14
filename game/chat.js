@@ -8,10 +8,14 @@ module.exports = function(io, socket, games) {
     if (data.message.charAt(0) == '/') {
       if (data.message == '/help')
         socket.emit('message', {message: 'Help: /ai /bouh'});
-      if (data.message == '/ai') {
+      if (data.message.split(' ')[0] == '/ai') {
         if (game.players.length == 2)
           socket.emit('message', {message: 'Room is already full'});
         else {
+          var depth = data.message.split(' ')[1];
+          if (depth >= 1 || depth <= 9)
+            game.aiDepth = depth;
+          console.log(game.aiDepth);
           socket.emit('message', {message: 'AI has come forth'})
           var AIsocket = require('socket.io-client')('http://localhost:8080/');
           game.ai = true;

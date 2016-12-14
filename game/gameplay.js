@@ -46,7 +46,7 @@ module.exports = {
 		checkgame(game, player, x, y);
                 if (game.ai) {
                   game.activePlayer = game.activePlayer ^ 1;
-                  var coord = game.aiObject.findPlay(2, player.pawn, game.map);
+                  var coord = game.aiObject.findPlay(2, player.pawn, game.map, game.aiDepth);
                   console.log('x: ', coord[1]);
                   console.log('y: ', coord[0]);
                   game.map[game.get1DP(coord[1], coord[0])] = 2;

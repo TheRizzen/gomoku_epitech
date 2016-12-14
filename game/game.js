@@ -10,6 +10,7 @@ function Game(roomName) {
     this.players = [];
     this.ai = false;
     this.aiObject;
+    this.aiDepth = 3;
 
     this.moves = [
 	[1, 1],

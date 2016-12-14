@@ -47,7 +47,7 @@ function ai(game) {
     };
     
     this.valueMap = [];
-    
+
     this.isTherePawnAround = function(x, y) {
 	var i = 0;
 	
@@ -354,11 +354,9 @@ function ai(game) {
 	return [maxX, maxY];
     }
 
-    this.findPlay = function(pawn_type, pawnTaken, map) {
+    this.findPlay = function(pawn_type, pawnTaken, map, depth = 3) {
 	if (this.emptyMap() == true)
 	    return ([18 / 2, 18 / 2]);
-
-	var depth = 3;
 
 	var y = 0;
 	var x;
