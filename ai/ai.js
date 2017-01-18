@@ -355,6 +355,8 @@ function ai(game) {
     }
 
     this.findPlay = function(pawn_type, pawnTaken, map, depth = 3) {
+        var now = require("performance-now");
+      var start = now();
 	if (this.emptyMap() == true)
 	    return ([18 / 2, 18 / 2]);
 
@@ -374,6 +376,8 @@ function ai(game) {
 	    y += 1;
 	}
 	this.pawnTaken = game.players[1].pawn;
+        var end = now();
+        console.log("AI TIME: " + (end - start).toFixed(3));
 	return this.minMaxLoop(depth, pawn_type);
     }
 };
